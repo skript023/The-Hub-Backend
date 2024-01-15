@@ -36,7 +36,7 @@ export class Accounting {
     @Prop({ type: Number, required: true })
     amount: number;
 
-    @Prop({ type: String, default: new Date().toISOString().slice(0, 10) })
+    @Prop({ type: String, default: new Date().toLocaleDateString() })
     date: string;
 }
 

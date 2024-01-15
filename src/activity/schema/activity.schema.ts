@@ -21,18 +21,10 @@ export class Activity {
     @Prop({ type: String, required: true })
     name: string;
 
-    @Prop({
-        type: String,
-        required: true,
-        default: new Date().toISOString().slice(0, 10),
-    })
+    @Prop({ type: String, required: true, default: new Date().toLocaleDateString() })
     start_date: string;
 
-    @Prop({
-        type: String,
-        required: true,
-        default: new Date().toISOString().slice(0, 10),
-    })
+    @Prop({ type: String, required: true, default: new Date().toLocaleDateString() })
     end_date: string;
 
     @Prop({ type: String, required: true })
