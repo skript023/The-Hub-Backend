@@ -19,7 +19,6 @@ import { AuthService } from './auth/auth.service';
 import { UsersService } from './users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicMiddleware } from './auth/basic,middleware';
-import { UatManagementModule } from './uat_management/uat_management.module';
 import { ProductModule } from './product/product.module';
 import { AccountingModule } from './accounting/accounting.module';
 
@@ -38,7 +37,6 @@ import { AccountingModule } from './accounting/accounting.module';
         RoleModule,
         AuthModule,
         AssetModule,
-        UatManagementModule,
         ProductModule,
         AccountingModule,
     ],
