@@ -45,14 +45,8 @@ export class UsersController {
     }
 
     @Get('avatar/:name')
-    image(@Param('name') name, @Res() res: Response) {
-        if (fs.existsSync(`${__dirname}/assets/avatar/${name}`)) {
-            res.sendFile(name, { root: `${__dirname}/assets/avatar/` });
-        } else {
-            res.redirect(
-                `https://cdn.glitch.global/134e6d29-f12e-4932-87e4-2031bac5ad1d/${name}`,
-            );
-        }
+    image(@Param('name') name: string, @Res() res: Response) {
+        return this.userService.getImage(name, res);
     }
 
     @Delete('avatar/delete/:name')

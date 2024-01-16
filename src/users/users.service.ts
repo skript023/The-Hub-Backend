@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import response from '../interfaces/response.dto';
 
 import * as fs from 'fs';
+import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
@@ -146,6 +147,18 @@ export class UsersService {
         this.response.success = true;
 
         return this.response.json();
+    }
+
+    async getImage(name: string, res: Response)
+    {
+        if (fs.existsSync(`${__dirname}/assets/avatar/${name}`))
+        {
+            res.sendFile(name, { root: `${__dirname}/assets/avatar/` });
+        }
+        else
+        {
+            res.redirect(`https://cdn.glitch.global/8b426895-1f9e-43d5-af3a-57e5ba338096/${name}`);
+        }
     }
 
     private async does_user_exist(
