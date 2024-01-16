@@ -31,7 +31,7 @@ export class Product {
     @Prop({ type: String, required: true })
     status: string;
 
-    @Prop({ type: [ProductDetail], required: true, default: null })
+    @Prop()
     detail: ProductDetail[];
 }
 

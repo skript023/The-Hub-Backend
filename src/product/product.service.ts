@@ -9,11 +9,8 @@ import * as mongoose from 'mongoose';
 
 @Injectable()
 export class ProductService {
-    constructor(
-        @InjectModel(Product.name)
-        private productModel: mongoose.Model<Product>,
-        private response: response<Product>,
-    ) {}
+    constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
+    { }
 
     async create(product: CreateProductDto) 
     {
@@ -64,17 +61,13 @@ export class ProductService {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
 
-        const product = await this.productModel.findByIdAndUpdate(
-            id,
-            products,
-            {
+        const product = await this.productModel.findByIdAndUpdate(id, products, {
                 new: true,
                 runValidators: true,
-            },
-        );
+        });
 
         if (!product)
-            throw new NotFoundException('Unable to update non-existing data');
+            throw new InternalServerErrorException('Unable to update non-existing data');
 
         this.response.message = `Success update ${product.name} product`;
         this.response.success = true;
@@ -86,7 +79,7 @@ export class ProductService {
     {
         const product = await this.productModel.findByIdAndDelete(id);
 
-        if (!product) throw new NotFoundException('Unable to update non-existing data');
+        if (!product) throw new InternalServerErrorException('Unable to delete non-existing data');
 
         this.response.message = `Success delete ${product.name} product`;
         this.response.success = true;

@@ -30,7 +30,7 @@ export class Accounting {
     @Prop({ type: String, required: true })
     payment_method: string;
 
-    @Prop({ type: TransactionDirection, required: true })
+    @Prop({ required: true })
     type: TransactionDirection;
 
     @Prop({ type: Number, required: true })
