@@ -17,7 +17,7 @@ export class AccountingController {
     constructor(private readonly accountingService: AccountingService) {}
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'create',
     })
     @Post()
@@ -27,7 +27,7 @@ export class AccountingController {
     }
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'read',
     })
     @Get()
@@ -36,7 +36,7 @@ export class AccountingController {
     }
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'read',
     })
     @Get(':id')
@@ -46,7 +46,7 @@ export class AccountingController {
     }
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'update',
     })
     @Patch(':id')
@@ -56,7 +56,7 @@ export class AccountingController {
     }
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'delete',
     })
     @Delete(':id')
