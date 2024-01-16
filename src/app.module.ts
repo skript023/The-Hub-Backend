@@ -49,7 +49,6 @@ export class AppModule implements NestModule {
             { path: 'user', method: RequestMethod.GET },
             { path: 'user/:id', method: RequestMethod.GET },
             { path: 'user/:id', method: RequestMethod.PATCH },
-            { path: 'user/avatar/:name', method: RequestMethod.GET },
             { path: 'user/profile/detail', method: RequestMethod.GET },
             { path: 'user/:id', method: RequestMethod.DELETE },
 
@@ -65,29 +64,17 @@ export class AppModule implements NestModule {
             { path: 'activity/:id', method: RequestMethod.PATCH },
             { path: 'activity/:id', method: RequestMethod.DELETE },
 
-            { path: 'asset', method: RequestMethod.GET },
-            { path: 'asset/add', method: RequestMethod.POST },
-            { path: 'asset/detail/:id', method: RequestMethod.GET },
-            { path: 'asset/update/:id', method: RequestMethod.PATCH },
-            { path: 'asset/delete/:id', method: RequestMethod.DELETE },
+            { path: 'product', method: RequestMethod.GET },
+            { path: 'product', method: RequestMethod.POST },
+            { path: 'product/:id', method: RequestMethod.GET },
+            { path: 'product/:id', method: RequestMethod.PATCH },
+            { path: 'product/:id', method: RequestMethod.DELETE },
 
-            { path: 'products', method: RequestMethod.GET },
-            { path: 'products/add', method: RequestMethod.POST },
-            { path: 'products/detail/:id', method: RequestMethod.GET },
-            { path: 'products/update/:id', method: RequestMethod.PATCH },
-            { path: 'products/delete/:id', method: RequestMethod.DELETE },
-
-            { path: 'carts', method: RequestMethod.GET },
-            { path: 'carts', method: RequestMethod.POST },
-            { path: 'carts/:id', method: RequestMethod.GET },
-            { path: 'carts/:id', method: RequestMethod.PATCH },
-            { path: 'carts/:id', method: RequestMethod.DELETE },
-
-            { path: 'payment', method: RequestMethod.GET },
-            { path: 'payment', method: RequestMethod.POST },
-            { path: 'payment/:id', method: RequestMethod.GET },
-            { path: 'payment/:id', method: RequestMethod.PATCH },
-            { path: 'payment/:id', method: RequestMethod.DELETE },
+            { path: 'accounting', method: RequestMethod.GET },
+            { path: 'accounting', method: RequestMethod.POST },
+            { path: 'accounting/:id', method: RequestMethod.GET },
+            { path: 'accounting/:id', method: RequestMethod.PATCH },
+            { path: 'accounting/:id', method: RequestMethod.DELETE },
         );
 
         consumer.apply(BasicMiddleware).forRoutes({
