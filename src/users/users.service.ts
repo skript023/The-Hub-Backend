@@ -153,7 +153,7 @@ export class UsersService {
     {
         if (fs.existsSync(`${__dirname}/assets/avatar/${name}`))
         {
-            res.sendFile(name, { root: `${__dirname}/assets/avatar/` });
+            res.sendFile(name, { root: `${__dirname}/assets/avatar/${name}` });
         }
         else
         {
