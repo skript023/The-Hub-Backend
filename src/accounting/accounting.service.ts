@@ -42,7 +42,7 @@ export class AccountingService {
         return this.response.json();
     }
 
-    async findOne(id: number) : Promise<response<Accounting>>
+    async findOne(id: string) : Promise<response<Accounting>>
 	{
         const transaction = await this.accountingModel
             .findById(id, { createdAt: 0, updatedAt: 0, __v: 0 })
@@ -57,7 +57,7 @@ export class AccountingService {
         return this.response.json();
     }
 
-    async update(id: number, transactions: UpdateAccountingDto) : Promise<response<Accounting>> 
+    async update(id: string, transactions: UpdateAccountingDto) : Promise<response<Accounting>> 
 	{
         transactions.date = new Date(transactions.date).toLocaleDateString();
 
@@ -79,7 +79,7 @@ export class AccountingService {
 		return this.response.json();
     }
 
-    async remove(id: number) : Promise<response<Accounting>>
+    async remove(id: string) : Promise<response<Accounting>>
 	{
         const transaction = await this.accountingModel.findByIdAndDelete(id);
 

@@ -41,7 +41,7 @@ export class ProductService {
         return this.response.json();
     }
 
-    async findOne(id: number)
+    async findOne(id: string)
     {
         const product = await this.productModel
             .findById(id, { createdAt: 0, updatedAt: 0, __v: 0 })
@@ -56,7 +56,7 @@ export class ProductService {
         return this.response.json();
     }
 
-    async update(id: number, products: UpdateProductDto) 
+    async update(id: string, products: UpdateProductDto) 
     {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
@@ -75,7 +75,7 @@ export class ProductService {
 		return this.response.json();
     }
 
-    async remove(id: number) 
+    async remove(id: string) 
     {
         const product = await this.productModel.findByIdAndDelete(id);
 

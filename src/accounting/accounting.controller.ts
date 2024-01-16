@@ -42,7 +42,7 @@ export class AccountingController {
     @Get(':id')
     findOne(@Param('id') id: string) 
     {
-        return this.accountingService.findOne(+id);
+        return this.accountingService.findOne(id);
     }
 
     @Auth({
@@ -52,7 +52,7 @@ export class AccountingController {
     @Patch(':id')
     update(@Param('id') id: string,@Body() updateAccountingDto: UpdateAccountingDto) 
     {
-        return this.accountingService.update(+id, updateAccountingDto);
+        return this.accountingService.update(id, updateAccountingDto);
     }
 
     @Auth({
@@ -62,6 +62,6 @@ export class AccountingController {
     @Delete(':id')
     remove(@Param('id') id: string) 
     {
-        return this.accountingService.remove(+id);
+        return this.accountingService.remove(id);
     }
 }
