@@ -19,7 +19,7 @@ export class AuthService {
         const payload = { encrypted };
 
         return {
-            token: await this.jwtService.signAsync(payload),
+            token: await this.jwtService.signAsync(payload, { expiresIn: '24h' }),
         };
     }
 
