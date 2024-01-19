@@ -161,7 +161,7 @@ export class ProductService {
                 });
             });
 
-            patchDocument(fs.readFileSync("./template/d2p-doc.docx"), {
+            const document = await patchDocument(fs.readFileSync("./template/d2p-doc.docx"), {
                 patches: {
                     product_name: {
                         type: PatchType.PARAGRAPH,
@@ -202,9 +202,9 @@ export class ProductService {
                         children: types
                     }
                 },
-            }).then((doc) => {
-                fs.writeFileSync(result, doc);
             });
+
+            fs.writeFileSync(result, document);
 
             return res.sendFile(filename, { root: './template' });
         }
