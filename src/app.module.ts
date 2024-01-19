@@ -63,12 +63,14 @@ export class AppModule implements NestModule {
             { path: 'activity/:id', method: RequestMethod.GET },
             { path: 'activity/:id', method: RequestMethod.PATCH },
             { path: 'activity/:id', method: RequestMethod.DELETE },
+            { path: 'activity/complete/:id', method: RequestMethod.PATCH },
 
             { path: 'product', method: RequestMethod.GET },
             { path: 'product', method: RequestMethod.POST },
             { path: 'product/:id', method: RequestMethod.GET },
             { path: 'product/:id', method: RequestMethod.PATCH },
             { path: 'product/:id', method: RequestMethod.DELETE },
+            { path: 'product/doc/:id', method: RequestMethod.GET },
 
             { path: 'accounting', method: RequestMethod.GET },
             { path: 'accounting', method: RequestMethod.POST },

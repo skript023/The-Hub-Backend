@@ -85,7 +85,8 @@ export class ActivityService {
         return this.response.json();
     }
 
-    async remove(id: string) {
+    async remove(id: string)
+    {
         const result = await this.activityModel.findByIdAndDelete(id);
 
         if (!result) throw new NotFoundException('Activity not found.');
@@ -96,7 +97,8 @@ export class ActivityService {
         return this.response.json();
     }
 
-    async completeTask(id: string) {
+    async completeTask(id: string)
+    {
         const activity = (await this.activityModel.findById(
             id,
         )) as UpdateActivityDto;
@@ -106,10 +108,7 @@ export class ActivityService {
         activity.status = 'Completed';
         activity.end_date = new Date().toLocaleDateString();
 
-        const result = await this.activityModel.findByIdAndUpdate(
-            id,
-            activity,
-            {
+        const result = await this.activityModel.findByIdAndUpdate(id, activity, {
                 new: true,
                 runValidators: true,
             },

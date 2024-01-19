@@ -16,10 +16,18 @@ export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
     { }
 
-    async create(product: CreateProductDto) 
+    async create(product: CreateProductDto, files: Express.Multer.File[]) 
     {
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
+
+        if (files) {
+            product.detail.forEach((detail) => {
+                files.forEach((file) => {
+                    detail.captures.push(file.filename);
+                });
+            });
+        }
 
         const result = await this.productModel.create(product);
 
@@ -60,14 +68,22 @@ export class ProductService {
         return this.response.json();
     }
 
-    async update(id: string, products: UpdateProductDto) 
+    async update(id: string, products: UpdateProductDto, files: Express.Multer.File[]) 
     {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
 
+        if (files) {
+            products.detail.forEach((detail) => {
+                files.forEach((file) => {
+                    detail.captures.push(file.filename);
+                });
+            });
+        }
+
         const product = await this.productModel.findByIdAndUpdate(id, products, {
-                new: true,
-                runValidators: true,
+            new: true,
+            runValidators: true,
         });
 
         if (!product)
@@ -136,7 +152,7 @@ export class ProductService {
                 });
 
                 detail.captures?.map((capture) => {
-                    data.push(new ImageRun({ data: fs.readFileSync(`./`), transformation: { width: 100, height: 100 } }));
+                    data.push(new ImageRun({ data: fs.readFileSync(`./storage/documents/${capture}`), transformation: { width: 100, height: 100 } }));
                 });
 
                 return new Paragraph({

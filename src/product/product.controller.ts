@@ -7,12 +7,16 @@ import {
     Param,
     Delete,
     Res,
+    UseInterceptors,
+    UploadedFiles,
+    ParseFilePipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Auth } from '../auth/decorator/auth.decorator';
 import { Response } from 'express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 export class ProductController {
@@ -23,8 +27,9 @@ export class ProductController {
         access: 'create',
     })
     @Post()
-    create(@Body() createProductDto: CreateProductDto) {
-        return this.productService.create(createProductDto);
+    @UseInterceptors(FileFieldsInterceptor([{ name: 'img' }]))
+    create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[]) {
+        return this.productService.create(createProductDto, files);
     }
 
     @Auth({
@@ -52,9 +57,10 @@ export class ProductController {
         access: 'update',
     })
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto)
+    @UseInterceptors(FileFieldsInterceptor([{ name: 'img' }]))
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[])
     {
-        return this.productService.update(id, updateProductDto);
+        return this.productService.update(id, updateProductDto, files);
     }
 
     @Auth({
