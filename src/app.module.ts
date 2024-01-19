@@ -15,7 +15,7 @@ import { RoleModule } from './role/role.module';
 import { AssetModule } from './asset/asset.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthMiddleware } from './auth/auth.middleware';
-import { BasicMiddleware } from './auth/basic,middleware';
+import { BasicMiddleware } from './auth/basic.middleware';
 import { ProductModule } from './product/product.module';
 import { AccountingModule } from './accounting/accounting.module';
 
