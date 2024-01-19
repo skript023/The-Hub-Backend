@@ -137,9 +137,10 @@ export class UsersService {
 
         if (!user) throw new NotFoundException('User not found.');
 
-        const path = `${__dirname}/assets/binaries/${user.image}`;
+        const path = `./storage/avatar/${user.image}`;
 
-        if (fs.existsSync(path)) {
+        if (fs.existsSync(path))
+        {
             fs.unlinkSync(path);
         }
 
@@ -151,9 +152,13 @@ export class UsersService {
 
     async getImage(name: string, res: Response)
     {
-        if (fs.existsSync(`./assets/avatar/${name}`))
+        if (fs.existsSync(`./storage/avatar/${name}`))
         {
-            res.sendFile(name, { root: `./assets/avatar/${name}` });
+            res.sendFile(name, { root: `./storage/avatar` });
+        }
+        else
+        {
+            res.redirect(`https://cdn.glitch.global/8b426895-1f9e-43d5-af3a-57e5ba338096/${name}`);
         }
     }
 
