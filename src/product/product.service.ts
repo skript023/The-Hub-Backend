@@ -4,8 +4,12 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schema/product.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import response from 'src/interfaces/response.dto';
+import * as fs from 'fs';
+import path from 'path';
 
 import * as mongoose from 'mongoose';
+import { ExternalHyperlink, ImageRun, Paragraph, patchDocument, PatchType, TextRun } from "docx";
+import { Response } from 'express';
 
 @Injectable()
 export class ProductService {
@@ -85,5 +89,100 @@ export class ProductService {
         this.response.success = true;
 
         return this.response.json();
+    }
+
+    async generateD2PDocument(id: string, res: Response)
+    {
+        const product = await this.productModel
+            .findById(id, { createdAt: 0, updatedAt: 0, __v: 0 })
+            .populate('user', ['fullname', 'username']);
+
+        if (!product) throw new NotFoundException('Product data not found.');
+
+        const product_split = product.name.split('UAT ');
+        const product_name = product_split[product_split.length - 1];
+
+        if (fs.existsSync(`./template/d2p-doc.docx`))
+        {
+            const result = `./template/Deployment_to_Production_${product_name.replace(' ', '_')}.docx`;
+
+            const types = product.detail.map((detail) => {
+                const details = `
+                ${detail.type}\n
+
+                ${detail.attributes?.map((attribute) => {
+                    return `${attribute.name}: ${attribute.value}`
+                })}\n
+                Status: ${detail.status}\n
+                No Order: ${detail.order_num}\n
+                `
+                return new Paragraph({
+                    text: detail.type,
+                    
+                    children: [
+                        new TextRun({
+                            text: `Status: ${detail.status}`,
+                            break: 1
+                        }),
+                        new TextRun({
+                            text: `No Order: ${detail.order_num}`,
+                            break: 1
+                        })
+                    ]
+                })
+            });
+
+            patchDocument(fs.readFileSync("./template/d2p-doc.docx"), {
+                patches: {
+                    product_name: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product_name,
+                            bold: true,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })],
+                    },
+                    date_raised: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
+                            bold: true,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })]
+                    },
+                    activities: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product_name,
+                            size: `${8}pt`,
+                            font: 'Calibri'
+                        })],
+                    },
+                    purpose: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product_name,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })],
+                    },
+                    detail: {
+                        type: PatchType.DOCUMENT,
+                        children: types
+                    }
+                },
+            }).then((doc) => {
+                fs.writeFileSync(result, doc);
+
+                res.sendFile(path.resolve(__dirname, result)); 
+            });
+        }
+
+        this.response.message = 'Failed generate document';
+        this.response.success = false;
+
+        res.status(404).json(this.response.json());
     }
 }

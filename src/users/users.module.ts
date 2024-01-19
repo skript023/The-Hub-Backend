@@ -17,7 +17,7 @@ import response from '../interfaces/response.dto';
         MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
         MulterModule.register({
             storage: diskStorage({
-                destination: __dirname + '/assets/avatar',
+                destination: './assets/avatar',
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];

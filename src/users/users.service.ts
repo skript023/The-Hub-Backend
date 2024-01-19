@@ -151,13 +151,9 @@ export class UsersService {
 
     async getImage(name: string, res: Response)
     {
-        if (fs.existsSync(`${__dirname}/assets/avatar/${name}`))
+        if (fs.existsSync(`./assets/avatar/${name}`))
         {
-            res.sendFile(name, { root: `${__dirname}/assets/avatar/${name}` });
-        }
-        else
-        {
-            res.redirect(`https://cdn.glitch.global/8b426895-1f9e-43d5-af3a-57e5ba338096/${name}`);
+            res.sendFile(name, { root: `./assets/avatar/${name}` });
         }
     }
 

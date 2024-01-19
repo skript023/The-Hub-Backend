@@ -6,11 +6,13 @@ import {
     Patch,
     Param,
     Delete,
+    Res,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Auth } from '../auth/decorator/auth.decorator';
+import { Response } from 'express';
 
 @Controller('product')
 export class ProductController {
@@ -62,5 +64,10 @@ export class ProductController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.productService.remove(id);
+    }
+
+    @Get('doc/:id')
+    generateDocument(@Param('id') id: string, @Res() res: Response) {
+        return this.productService.generateD2PDocument(id, res);
     }
 }
