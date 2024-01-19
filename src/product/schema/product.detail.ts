@@ -8,5 +8,5 @@ export class ProductDetail {
     type: string;
     status: string;
     attributes: AttributesDetail[];
-    images: string[];
+    captures: string[];
 }

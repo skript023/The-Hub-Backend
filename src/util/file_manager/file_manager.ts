@@ -12,7 +12,7 @@ export class FileManager {
         }).format(dates);
     }
 
-    pathFolder(folderName: string) {
+    storagePath(folderName: string) {
         const folder = `storage/${folderName}/pictures`;
 
         const path = {
@@ -23,7 +23,7 @@ export class FileManager {
     }
 
     async uploadFile(file: Express.Multer.File, filename: string, category: string) {
-        const folder = this.pathFolder(category);
+        const folder = this.storagePath(category);
 
         filename = filename.replace(' ', '_');
 

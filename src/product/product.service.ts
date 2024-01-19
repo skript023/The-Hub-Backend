@@ -101,35 +101,48 @@ export class ProductService {
 
         const product_split = product.name.split('UAT ');
         const product_name = product_split[product_split.length - 1];
+        const filename = `Deployment_to_Production_${product_name.replace(' ', '_')}.docx`;
 
         if (fs.existsSync(`./template/d2p-doc.docx`))
         {
-            const result = `./template/Deployment_to_Production_${product_name.replace(' ', '_')}.docx`;
+            const result = `./template/${filename}`;
 
             const types = product.detail.map((detail) => {
-                const details = `
-                ${detail.type}\n
+                const data = [
+                    new TextRun({
+                        text: `Status: ${detail.status}`,
+                        bold: true,
+                        size: `${11}pt`,
+                        font: 'Calibri',
+                        break: 1
+                    }),
+                    new TextRun({
+                        text: `No Order: ${detail.order_num}`,
+                        bold: true,
+                        size: `${11}pt`,
+                        font: 'Calibri',
+                        break: 1
+                    })
+                ];
 
-                ${detail.attributes?.map((attribute) => {
-                    return `${attribute.name}: ${attribute.value}`
-                })}\n
-                Status: ${detail.status}\n
-                No Order: ${detail.order_num}\n
-                `
+                detail.attributes?.map((attribute) => {
+                    data.push(new TextRun({
+                        text: `${attribute.name}: ${attribute.value}`,
+                        bold: true,
+                        size: `${11}pt`,
+                        font: 'Calibri',
+                        break: 1
+                    }))
+                });
+
+                detail.captures?.map((capture) => {
+                    data.push(new ImageRun({ data: fs.readFileSync(`./`), transformation: { width: 100, height: 100 } }));
+                });
+
                 return new Paragraph({
                     text: detail.type,
-                    
-                    children: [
-                        new TextRun({
-                            text: `Status: ${detail.status}`,
-                            break: 1
-                        }),
-                        new TextRun({
-                            text: `No Order: ${detail.order_num}`,
-                            break: 1
-                        })
-                    ]
-                })
+                    children: data
+                });
             });
 
             patchDocument(fs.readFileSync("./template/d2p-doc.docx"), {
@@ -175,9 +188,9 @@ export class ProductService {
                 },
             }).then((doc) => {
                 fs.writeFileSync(result, doc);
-
-                res.sendFile(path.resolve(__dirname, result)); 
             });
+
+            return res.sendFile(filename, { root: './template' });
         }
 
         this.response.message = 'Failed generate document';
