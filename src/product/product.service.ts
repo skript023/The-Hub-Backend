@@ -18,15 +18,23 @@ export class ProductService {
 
     async create(product: CreateProductDto, files: Express.Multer.File[]) 
     {
+        product._id = null;
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
 
         if (files) {
-            product.detail.forEach((detail) => {
-                files.forEach((file) => {
-                    detail.captures.push(file.filename);
-                });
+            product.detail.map((detail) => {
+                console.log(`Files ${files.length}`);
+                for (let i = 0; i < files.length; i++) {
+                    detail.captures.push(files[i].filename);
+                    console.log(`Files ${files[i]}`);
+                }
             });
+
+            this.response.message = `Product saved failed`;
+            this.response.success = true;
+
+            return this.response.json();
         }
 
         const result = await this.productModel.create(product);

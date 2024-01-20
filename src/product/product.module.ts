@@ -6,13 +6,16 @@ import { Product, ProductSchema } from './schema/product.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import path from 'path';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
         MulterModule.register({
             storage: diskStorage({
-                destination: './storage/uat/capture',
+                destination: (req, file, cb) => {
+                    cb(null, path.join(__dirname, './storage/uat/capture'))
+                },
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];

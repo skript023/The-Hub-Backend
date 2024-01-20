@@ -2,6 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 import { ProductDetail } from '../schema/product.detail';
 
 export class CreateProductDto {
+    _id: string
     @IsNotEmpty()
     user_id: string;
     @IsNotEmpty()

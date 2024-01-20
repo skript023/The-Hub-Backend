@@ -10,6 +10,8 @@ import {
     UseInterceptors,
     UploadedFiles,
     ParseFilePipe,
+    MaxFileSizeValidator,
+    FileTypeValidator,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -27,7 +29,7 @@ export class ProductController {
         access: 'create',
     })
     @Post()
-    @UseInterceptors(FileFieldsInterceptor([{ name: 'img' }]))
+    @UseInterceptors(FileFieldsInterceptor([{ name: 'captures' }]))
     create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[]) {
         return this.productService.create(createProductDto, files);
     }
