@@ -1,3 +1,10 @@
+import { Prop } from "@nestjs/mongoose";
+
+class Evidents {
+    @Prop({ default: null })
+    image: string;
+}
+
 class AttributesDetail {
     name: string;
     value: string;
@@ -8,5 +15,5 @@ export class ProductDetail {
     type: string;
     status: string;
     attributes: AttributesDetail[];
-    captures: any[];
+    captures: Evidents[];
 }

@@ -12,6 +12,7 @@ import {
     ParseFilePipe,
     MaxFileSizeValidator,
     FileTypeValidator,
+    Put,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -29,9 +30,9 @@ export class ProductController {
         access: 'create',
     })
     @Post()
-    @UseInterceptors(FileFieldsInterceptor([{ name: 'captures' }]))
-    create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[]) {
-        return this.productService.create(createProductDto, files);
+    create(@Body() createProductDto: CreateProductDto)
+    {
+        return this.productService.create(createProductDto);
     }
 
     @Auth({
@@ -59,10 +60,9 @@ export class ProductController {
         access: 'update',
     })
     @Patch(':id')
-    @UseInterceptors(FileFieldsInterceptor([{ name: 'img' }]))
-    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[])
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto)
     {
-        return this.productService.update(id, updateProductDto, files);
+        return this.productService.update(id, updateProductDto);
     }
 
     @Auth({
@@ -72,6 +72,12 @@ export class ProductController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.productService.remove(id);
+    }
+
+    @Put('uploads/detail/captures/:id')
+    @UseInterceptors(FileFieldsInterceptor([{ name: 'capture' }]))
+    uploadCaptures(@Param('id') id, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[]) {
+        return this.productService.multiUpload(id, files);
     }
 
     @Get('doc/:id')

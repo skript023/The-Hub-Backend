@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schema/product.schema';
@@ -16,26 +16,11 @@ export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
     { }
 
-    async create(product: CreateProductDto, files: Express.Multer.File[]) 
+    async create(product: CreateProductDto) 
     {
         product._id = null;
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
-
-        if (files) {
-            product.detail.map((detail) => {
-                console.log(`Files ${files.length}`);
-                for (let i = 0; i < files.length; i++) {
-                    detail.captures.push(files[i].filename);
-                    console.log(`Files ${files[i]}`);
-                }
-            });
-
-            this.response.message = `Product saved failed`;
-            this.response.success = true;
-
-            return this.response.json();
-        }
 
         const result = await this.productModel.create(product);
 
@@ -76,18 +61,10 @@ export class ProductService {
         return this.response.json();
     }
 
-    async update(id: string, products: UpdateProductDto, files: Express.Multer.File[]) 
+    async update(id: string, products: UpdateProductDto) 
     {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
-
-        if (files) {
-            products.detail.forEach((detail) => {
-                files.forEach((file) => {
-                    detail.captures.push(file.filename);
-                });
-            });
-        }
 
         const product = await this.productModel.findByIdAndUpdate(id, products, {
             new: true,
@@ -110,6 +87,38 @@ export class ProductService {
         if (!product) throw new InternalServerErrorException('Unable to delete non-existing data');
 
         this.response.message = `Success delete ${product.name} product`;
+        this.response.success = true;
+
+        return this.response.json();
+    }
+
+    async multiUpload(id: string, files: Express.Multer.File[])
+    {
+        const product = await this.productModel.findById(id, { createdAt: 0, updatedAt: 0, __v: 0 });
+        if (!product) throw new NotFoundException('Unable to add file to non-existing data');
+
+        let captures: any = [];
+
+        const update = product.detail.map((detail) =>
+        {
+            for (let i = 0; i < files['capture'].length; i++)
+            {
+                captures.push({ image: files['capture'][i]?.filename });
+            }
+
+            detail.captures = captures;
+
+            return detail;
+        });
+
+        product.detail = update;
+
+        const saved = await this.productModel.findByIdAndUpdate(id, product, {
+            new: true,
+            runValidators: true,
+        });
+
+        this.response.message = `Success uploads ${saved.name} product`;
         this.response.success = true;
 
         return this.response.json();

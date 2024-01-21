@@ -13,9 +13,7 @@ import path from 'path';
         MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
         MulterModule.register({
             storage: diskStorage({
-                destination: (req, file, cb) => {
-                    cb(null, path.join(__dirname, './storage/uat/capture'))
-                },
+                destination: './storage/uat/capture',
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];
