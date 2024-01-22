@@ -16,7 +16,7 @@ export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
     { }
 
-    async create(product: CreateProductDto) 
+    async create(product: CreateProductDto, files: Express.Multer.File[]) 
     {
         product._id = null;
         product.start_date = new Date(product.start_date).toLocaleDateString();
@@ -30,7 +30,7 @@ export class ProductService {
         this.response.message = `Product ${result.name} saved successfully`;
         this.response.success = true;
 
-        return this.response.json();
+        return this.response.json(); 
     }
 
     async findAll() 

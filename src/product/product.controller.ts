@@ -30,9 +30,10 @@ export class ProductController {
         access: 'create',
     })
     @Post()
-    create(@Body() createProductDto: CreateProductDto)
+    @UseInterceptors(FileFieldsInterceptor([{ name: 'capture' }]))
+    create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Express.Multer.File[])
     {
-        return this.productService.create(createProductDto);
+        return this.productService.create(createProductDto, files);
     }
 
     @Auth({
