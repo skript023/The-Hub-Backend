@@ -143,25 +143,17 @@ export class ProductService {
             const types = product.detail.map((detail) => {
                 const data = [
                     new TextRun({
-                        text: `Status: ${detail.status}`,
+                        text: detail.type,
                         bold: true,
-                        size: `${11}pt`,
+                        size: `${14}pt`,
                         font: 'Calibri',
-                        break: 1
-                    }),
-                    new TextRun({
-                        text: `No Order: ${detail.order_num}`,
-                        bold: true,
-                        size: `${11}pt`,
-                        font: 'Calibri',
-                        break: 1
+                        break: 2
                     })
                 ];
 
                 detail.attributes?.map((attribute) => {
                     data.push(new TextRun({
                         text: `${attribute.name}: ${attribute.value}`,
-                        bold: true,
                         size: `${11}pt`,
                         font: 'Calibri',
                         break: 1
@@ -172,8 +164,21 @@ export class ProductService {
                     data.push(new ImageRun({ data: fs.readFileSync(`./storage/documents/${capture}`), transformation: { width: 100, height: 100 } }));
                 });
 
+                data.push(new TextRun({
+                    text: `Status: ${detail.status}`,
+                    size: `${11}pt`,
+                    font: 'Calibri',
+                    break: 1
+                }));
+
+                data.push(new TextRun({
+                    text: `No Order: ${detail.order_num}`,
+                    size: `${11}pt`,
+                    font: 'Calibri',
+                    break: 1
+                }));
+
                 return new Paragraph({
-                    text: detail.type,
                     children: data
                 });
             });
@@ -198,7 +203,16 @@ export class ProductService {
                             font: 'Verdana'
                         })]
                     },
-                    activities: {
+                    sign_date: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
+                            bold: true,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })]
+                    },
+                    product_small: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
                             text: product_name,
@@ -217,7 +231,7 @@ export class ProductService {
                     detail: {
                         type: PatchType.DOCUMENT,
                         children: types
-                    }
+                    }   
                 },
             });
 
