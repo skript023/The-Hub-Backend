@@ -12,7 +12,8 @@ export class FileManager {
         }).format(dates);
     }
 
-    storagePath(folderName: string) {
+    storagePath(folderName: string)
+    {
         const folder = `storage/${folderName}/pictures`;
 
         const path = {
@@ -22,7 +23,8 @@ export class FileManager {
         return path;
     }
 
-    async uploadFile(file: Express.Multer.File, filename: string, category: string) {
+    async uploadFile(file: Express.Multer.File, filename: string, category: string)
+    {
         const folder = this.storagePath(category);
 
         filename = filename.replace(' ', '_');
@@ -42,7 +44,7 @@ export class FileManager {
             path: path
         };
 
-        return location;
+        return filename;
     }
 
     removeImage(path: string) {

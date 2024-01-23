@@ -16,11 +16,19 @@ export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
     { }
 
-    async create(product: CreateProductDto, files: Express.Multer.File[]) 
+    async create(product: CreateProductDto, files: Array<Express.Multer.File>) 
     {
         product._id = null;
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
+
+        for (const detail of product.detail)
+        {
+            for (const capture of detail.captures)
+            {
+                capture.image = `${[product.name]}_${capture.image}`;
+            }
+        }
 
         const result = await this.productModel.create(product);
 
@@ -61,10 +69,19 @@ export class ProductService {
         return this.response.json();
     }
 
-    async update(id: string, products: UpdateProductDto) 
+    async update(id: string, products: UpdateProductDto, files: Array<Express.Multer.File>) 
     {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
+
+        for (const detail of products.detail)
+        {
+            if (detail.captures) {
+                for (const capture of detail.captures) {
+                    capture.image = `${[products.name]}_${capture.image}`;
+                }
+            }
+        }
 
         const product = await this.productModel.findByIdAndUpdate(id, products, {
             new: true,
@@ -161,7 +178,7 @@ export class ProductService {
                 });
 
                 detail.captures?.map((capture) => {
-                    data.push(new ImageRun({ data: fs.readFileSync(`./storage/documents/${capture}`), transformation: { width: 100, height: 100 } }));
+                    data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 640, height: 400 } }));
                 });
 
                 data.push(new TextRun({
