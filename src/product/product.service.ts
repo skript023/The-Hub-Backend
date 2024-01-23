@@ -177,18 +177,6 @@ export class ProductService {
                     }))
                 });
 
-                detail.captures?.map((capture) => {
-                    if (!fs.existsSync(`./storage/uat/capture/${capture.image}`))
-                    {
-                        this.response.message = 'Failed generate document';
-                        this.response.success = false;
-
-                        res.status(404).json(this.response.json());
-                    }
-
-                    data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 640, height: 400 } }));
-                });
-
                 data.push(new TextRun({
                     text: `Status: ${detail.status}`,
                     size: `${11}pt`,
@@ -202,6 +190,12 @@ export class ProductService {
                     font: 'Calibri',
                     break: 1
                 }));
+
+                detail.captures?.map((capture) => {
+                    if (fs.existsSync(`./storage/uat/capture/${capture.image}`)) {
+                        data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 640, height: 400 } }));
+                    }
+                });
 
                 return new Paragraph({
                     children: data
@@ -238,6 +232,14 @@ export class ProductService {
                         })]
                     },
                     product_small: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product_name,
+                            size: `${8}pt`,
+                            font: 'Calibri'
+                        })],
+                    },
+                    product_discount: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
                             text: product_name,
