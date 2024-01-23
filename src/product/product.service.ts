@@ -178,6 +178,14 @@ export class ProductService {
                 });
 
                 detail.captures?.map((capture) => {
+                    if (!fs.existsSync(`./storage/uat/capture/${capture.image}`))
+                    {
+                        this.response.message = 'Failed generate document';
+                        this.response.success = false;
+
+                        res.status(404).json(this.response.json());
+                    }
+
                     data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 640, height: 400 } }));
                 });
 

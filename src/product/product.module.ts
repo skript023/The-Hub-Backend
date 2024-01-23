@@ -26,7 +26,7 @@ import * as fs from 'fs';
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];
-                    const filename = `${req.body.name}${name}.${extension}`;
+                    const filename = `${req.body.name}_${name}.${extension}`;
 
                     cb(null, filename);
                 },
