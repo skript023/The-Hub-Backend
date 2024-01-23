@@ -168,12 +168,14 @@ export class ProductService {
             const types = product.detail.map((detail) => {
                 const data = [
                     new TextRun({
-                        text: detail.type,
+                        text: `${detail.type}`,
                         bold: true,
                         size: `${14}pt`,
                         font: 'Calibri',
-                        break: 2
-                    })
+                    }),
+                    new TextRun({
+                        break: 1
+                    }),
                 ];
 
                 detail.attributes?.map((attribute) => {
@@ -197,15 +199,22 @@ export class ProductService {
                     size: `${11}pt`,
                     font: 'Calibri',
                     break: 1
+                }),
+                new TextRun({
+                    break: 2
                 }));
 
                 detail.captures?.map((capture) => {
                     if (fs.existsSync(`./storage/uat/capture/${capture.image}`)) {
-                        data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 640, height: 400 } }));
+                        data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 635, height: 331 } }));
                     }
                 });
 
                 return new Paragraph({
+                    spacing: {
+                        line: 300
+                    },
+                    
                     children: data
                 });
             });
