@@ -11,13 +11,21 @@ import { User, UserSchema } from './schema/user.schema';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import response from '../interfaces/response.dto';
+import { existsSync, mkdirSync } from 'fs';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
         MulterModule.register({
             storage: diskStorage({
-                destination: './storage/avatar',
+                destination: (req, file, cb) => {
+                    const path = './storage/avatar';
+                    if (!existsSync(path)) {
+                        mkdirSync(path, { recursive: true });
+                    }
+
+                    cb(null, path);
+                },
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];
