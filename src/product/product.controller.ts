@@ -31,7 +31,7 @@ export class ProductController {
     })
     @Post()
     @UseInterceptors(AnyFilesInterceptor())
-    create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Array<Express.Multer.File>)
+    create(@Body() createProductDto: CreateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: false })) files: Array<Express.Multer.File>)
     {
         return this.productService.create(createProductDto, files);
     }
@@ -62,7 +62,7 @@ export class ProductController {
     })
     @Patch(':id')
     @UseInterceptors(AnyFilesInterceptor())
-    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: true })) files: Array<Express.Multer.File>)
+    update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @UploadedFiles(new ParseFilePipe({ fileIsRequired: false })) files: Array<Express.Multer.File>)
     {
         return this.productService.update(id, updateProductDto, files);
     }
