@@ -22,14 +22,13 @@ export class ProductService {
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
 
-        if (files)
+        if (files?.length >= 1)
         {
             for (const detail of product.detail)
             {
-                for (const capture of detail.captures)
-                {
-                    capture.image = `${[product.name]}_${capture.image}`;
-                }
+                detail.captures.forEach((capture, index) => {
+                    capture.image = `${[product.name]}_${files[index].originalname}`;
+                });
             }
         }
 
@@ -77,16 +76,15 @@ export class ProductService {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
 
-        if (files)
+        if (files?.length >= 1)
         {
             for (const detail of products.detail)
             {
                 if (detail.captures)
                 {
-                    for (const capture of detail.captures)
-                    {
-                        capture.image = `${[products.name]}_${capture.image}`;
-                    }
+                    detail.captures.forEach((capture, index) => {
+                        capture.image = `${[products.name]}_${files[index].originalname}`;
+                    });
                 }
             }
         }
