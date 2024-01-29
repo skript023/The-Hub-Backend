@@ -237,11 +237,18 @@ export class ProductService {
                             font: 'Verdana'
                         })]
                     },
+                    signer: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: process.env.SIGNER,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })]
+                    },
                     sign_date: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
                             text: this.getCurrentDate(),//Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
-                            bold: true,
                             size: `${11}pt`,
                             font: 'Verdana'
                         })]
