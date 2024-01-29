@@ -61,10 +61,7 @@ export class AccountingService {
 	{
         transactions.date = new Date(transactions.date).toLocaleDateString();
 
-        const transaction = await this.accountingModel.findByIdAndUpdate(
-            id,
-            transactions,
-            {
+        const transaction = await this.accountingModel.findByIdAndUpdate(id, transactions, {
                 new: true,
                 runValidators: true,
             },
