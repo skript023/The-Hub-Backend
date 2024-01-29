@@ -231,7 +231,7 @@ export class ProductService {
                     date_raised: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
+                            text: this.getCurrentDate(),
                             bold: true,
                             size: `${11}pt`,
                             font: 'Verdana'
@@ -240,7 +240,7 @@ export class ProductService {
                     sign_date: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
+                            text: this.getCurrentDate(),//Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date()),
                             bold: true,
                             size: `${11}pt`,
                             font: 'Verdana'
@@ -286,5 +286,20 @@ export class ProductService {
         this.response.success = false;
 
         res.status(404).json(this.response.json());
+    }
+
+    private getCurrentDate(): string
+    {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const monthIndex = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+
+        return `${day} ${months[monthIndex]} ${year}`;
     }
 }
