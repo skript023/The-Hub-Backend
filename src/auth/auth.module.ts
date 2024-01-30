@@ -7,10 +7,11 @@ import { UsersService } from '../users/users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../users/schema/user.schema';
 import response from '../interfaces/response.dto';
+import { RoleSchema } from '../role/schema/role.schema';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }, { name: 'Role', schema: RoleSchema }]),
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,

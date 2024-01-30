@@ -12,10 +12,11 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import response from '../interfaces/response.dto';
 import { existsSync, mkdirSync } from 'fs';
+import { RoleSchema } from '../role/schema/role.schema';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+        MongooseModule.forFeature([{ name: 'User', schema: UserSchema }, { name: 'Role', schema: RoleSchema }]),
         MulterModule.register({
             storage: diskStorage({
                 destination: (req, file, cb) => {

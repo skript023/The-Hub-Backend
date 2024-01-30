@@ -15,41 +15,42 @@ import response from '../interfaces/response.dto';
 
 import * as fs from 'fs';
 import { Response } from 'express';
+import { Role } from '../role/schema/role.schema';
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectModel(User.name) private userModel: mongoose.Model<User>,
-        private response: response<User>,
+        @InjectModel(User.name) private userModel: mongoose.Model<User>, @InjectModel(Role.name) private roleModel: mongoose.Model<Role>, private response: response<User>
     ) {}
 
-    async create(user: CreateUserDto, file: Express.Multer.File) {
+    async create(user: CreateUserDto, file: Express.Multer.File)
+    {
         const exist = await this.does_user_exist(user);
+        const default_role = await this.roleModel.findOne({ name: 'user' });
 
         if (exist)
             throw new BadRequestException('Username or Email already used');
 
         user.password = await bcrypt.hash(user.password, 10);
 
-        if (user.role_id?.length <= 0) {
-            user.role_id = '65042e34aca29db82fe65944';
+        if (user.role_id?.length == 0)
+        {
+            user.role_id = default_role._id;
         }
 
-        user.image = file.filename;
+        if (file?.filename)
+            user.image = file.filename;
 
-        try {
-            await this.userModel.create(user);
-        } catch {
-            throw new InternalServerErrorException();
-        }
+        const result = await this.userModel.create(user);
 
-        this.response.message = 'Register success';
+        this.response.message = `Register an account success`;
         this.response.success = true;
 
         return this.response.json();
     }
 
-    async findAll() {
+    async findAll()
+    {
         const users = await this.userModel
             .find(null, { password: 0, createdAt: 0, updatedAt: 0, __v: 0 })
             .populate('role', ['name', 'level', 'access']);
@@ -61,7 +62,8 @@ export class UsersService {
         return this.response.json();
     }
 
-    async findOne(id: string) {
+    async findOne(id: string)
+    {
         if (!mongoose.Types.ObjectId.isValid(id))
             throw new BadRequestException(`${id} is not valid arguments`);
 
@@ -107,12 +109,15 @@ export class UsersService {
         });
     }
 
-    async update(id: string, user: UpdateUserDto, file: Express.Multer.File) {
-        if (file != null) {
+    async update(id: string, user: UpdateUserDto, file: Express.Multer.File)
+    {
+        if (file != null)
+        {
             user.image = file.filename;
         }
 
-        if (user.password != null) {
+        if (user.password?.length != 0)
+        {
             user.password = await bcrypt.hash(user.password, 10);
         }
 
@@ -130,7 +135,8 @@ export class UsersService {
         return this.response.json();
     }
 
-    async remove(id: string): Promise<any> {
+    async remove(id: string): Promise<any>
+    {
         const user = (await this.userModel.findByIdAndDelete(id, {
             select: ['fullname'],
         })) as User;
