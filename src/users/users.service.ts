@@ -70,9 +70,6 @@ export class UsersService {
         const user = await this.userModel
             .findById(id, { password: 0, updatedAt: 0, __v: 0 })
             .populate('role', ['name', 'level', 'access']);
-        //.populate('asset', ['license', 'status', 'expired', 'expired_date'])
-        //.populate('activity', ['name', 'start_date', 'end_date', 'status'])
-        //.populate('order');
 
         if (!user) throw new NotFoundException('User not found');
 
@@ -168,11 +165,9 @@ export class UsersService {
         }
     }
 
-    private async does_user_exist(
-        userCreation: CreateUserDto,
-    ): Promise<boolean> {
-        const user = await this.userModel
-            .find({
+    private async does_user_exist(userCreation: CreateUserDto): Promise<boolean>
+    {
+        const user = await this.userModel.find({
                 $or: [
                     { username: userCreation.username },
                     { email: userCreation.email },
@@ -180,7 +175,8 @@ export class UsersService {
             })
             .exec();
 
-        if (user.length !== 0) {
+        if (user.length !== 0)
+        {
             return true;
         }
 

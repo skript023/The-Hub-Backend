@@ -26,7 +26,7 @@ export class ProductController {
     constructor(private readonly productService: ProductService) {}
 
     @Auth({
-        role: ['admin'],
+        role: ['admin', 'staff'],
         access: 'create',
     })
     @Post()
@@ -37,7 +37,7 @@ export class ProductController {
     }
 
     @Auth({
-        role: ['admin'],
+        role: ['admin', 'staff'],
         access: 'read',
     })
     @Get()
@@ -47,7 +47,7 @@ export class ProductController {
     }
 
     @Auth({
-        role: ['admin'],
+        role: ['admin', 'staff'],
         access: 'read',
     })
     @Get(':id')
@@ -57,7 +57,7 @@ export class ProductController {
     }
 
     @Auth({
-        role: ['admin'],
+        role: ['admin', 'staff'],
         access: 'update',
     })
     @Patch(':id')
