@@ -72,6 +72,10 @@ export class UsersController {
         return this.userService.findOne(id);
     }
 
+    @Auth({
+        role: ['admin'],
+        access: 'update',
+    })
     @UseInterceptors(FileInterceptor('image'))
     @Patch(':id')
     update(
@@ -92,7 +96,7 @@ export class UsersController {
     }
 
     @Auth({
-        role: ['admin', 'staff'],
+        role: ['admin'],
         access: 'delete',
     })
     @Delete(':id')
