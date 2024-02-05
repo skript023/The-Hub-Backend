@@ -20,7 +20,9 @@ import { Role } from '../role/schema/role.schema';
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectModel(User.name) private userModel: mongoose.Model<User>, @InjectModel(Role.name) private roleModel: mongoose.Model<Role>, private response: response<User>
+        @InjectModel(User.name) private userModel: mongoose.Model<User>,
+        @InjectModel(Role.name) private roleModel: mongoose.Model<Role>,
+        private response: response<User>
     ) {}
 
     async create(user: CreateUserDto, file: Express.Multer.File)
