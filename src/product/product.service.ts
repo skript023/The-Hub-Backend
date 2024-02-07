@@ -22,6 +22,8 @@ export class ProductService {
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
 
+        console.log(files);
+
         if (files?.length >= 1)
         {
             for (const detail of product.detail)
@@ -76,6 +78,8 @@ export class ProductService {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
 
+        console.log(files);
+
         if (files?.length >= 1)
         {
             for (const detail of products.detail)
@@ -83,7 +87,9 @@ export class ProductService {
                 if (detail.captures)
                 {
                     detail.captures.forEach((capture, index) => {
-                        capture.image = `${[products.name]}_${files[index].originalname}`;
+                        capture.image = `${[products.name]}_${capture.image}`;
+
+                        console.log(files[index].originalname);
                     });
                 }
             }
