@@ -17,17 +17,14 @@ import { Auth } from '../auth/decorator/auth.decorator';
 export class RoleController {
     constructor(private readonly roleService: RoleService) {}
 
-    @Post('add')
+    @Post()
     @Auth({
         role: ['admin', 'staff'],
         access: 'create',
     })
-    async create(@Body() createRoleDto: CreateRoleDto): Promise<any> {
-        const role = await this.roleService.create(createRoleDto);
-
-        return {
-            message: `Create role ${role.name} success`,
-        };
+    async create(@Body() createRoleDto: CreateRoleDto)
+    {
+        return this.roleService.create(createRoleDto);
     }
 
     @Get()
@@ -35,45 +32,37 @@ export class RoleController {
         role: ['admin', 'staff'],
         access: 'read',
     })
-    async findAll(): Promise<Role[]> {
+    async findAll() {
         return this.roleService.findAll();
     }
 
-    @Get('detail/:id')
+    @Get(':id')
     @Auth({
         role: ['admin', 'staff'],
         access: 'read',
     })
-    async findOne(@Param('id') id: string): Promise<Role> {
+    async findOne(@Param('id') id: string)
+    {
         return this.roleService.findOne(id);
     }
 
-    @Patch('update/:id')
+    @Patch(':id')
     @Auth({
         role: ['admin'],
         access: 'update',
     })
-    async update(
-        @Param('id') id: string,
-        @Body() updateRoleDto: UpdateRoleDto,
-    ): Promise<any> {
-        const role = await this.roleService.update(id, updateRoleDto);
-
-        return {
-            message: `Update role ${role.name} success`,
-        };
+    async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto)
+    {
+        return this.roleService.update(id, updateRoleDto);
     }
 
-    @Delete('delete/:id')
+    @Delete(':id')
     @Auth({
         role: ['admin', 'staff'],
         access: 'delete',
     })
-    async remove(@Param('id') id: string): Promise<any> {
-        const role = await this.roleService.remove(id);
-
-        return {
-            message: `Delete role ${role.name} success`,
-        };
+    async remove(@Param('id') id: string)
+    {
+        return this.roleService.remove(id);
     }
 }

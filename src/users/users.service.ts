@@ -96,7 +96,7 @@ export class UsersService {
             throw new UnauthorizedException();
         }
 
-        user.recent_login = new Date().toString();
+        user.recent_login = Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date());
 
         user.save();
 
