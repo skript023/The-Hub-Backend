@@ -115,7 +115,7 @@ export class UsersService {
             user.image = file.filename;
         }
 
-        if (user.password?.length != 0)
+        if (user.password?.length > 0)
         {
             user.password = await bcrypt.hash(user.password, 10);
         }
