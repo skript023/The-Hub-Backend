@@ -34,8 +34,8 @@ export class UsersService {
             throw new BadRequestException('Username or Email already used');
 
         user.password = await bcrypt.hash(user.password, 10);
-        user.recent_login = user?.recent_login ?? Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.recent_login));
-        user.expired = user?.recent_login ?? Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.expired));
+        user.recent_login = Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.recent_login));
+        user.expired = Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.expired));
 
         if (user.role_id?.length == 0)
         {
@@ -122,8 +122,8 @@ export class UsersService {
             user.password = await bcrypt.hash(user.password, 10);
         }
 
-        user.recent_login = user?.recent_login ?? Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.recent_login));
-        user.expired = user?.recent_login ?? Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.expired));
+        user.recent_login = Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.recent_login));
+        user.expired = Intl.DateTimeFormat('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' }).format(new Date(user.expired));
 
 
         const result = await this.userModel.findByIdAndUpdate(id, user, {
