@@ -26,7 +26,7 @@ export class UpdateUserDto {
     readonly hardware_id: string;
     readonly computer_name: string;
     image: string;
-    readonly expired: string;
-    readonly recent_login: string;
+    expired: string;
+    recent_login: string;
     readonly remember_token: string;
 }
