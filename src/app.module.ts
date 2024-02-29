@@ -53,10 +53,10 @@ export class AppModule implements NestModule {
             { path: 'user/:id', method: RequestMethod.DELETE },
 
             { path: 'role', method: RequestMethod.GET },
-            { path: 'role/add', method: RequestMethod.POST },
-            { path: 'role/detail/:id', method: RequestMethod.GET },
-            { path: 'role/update/:id', method: RequestMethod.PATCH },
-            { path: 'role/delete/:id', method: RequestMethod.DELETE },
+            { path: 'role', method: RequestMethod.POST },
+            { path: 'role/:id', method: RequestMethod.GET },
+            { path: 'role/:id', method: RequestMethod.PATCH },
+            { path: 'role/:id', method: RequestMethod.DELETE },
 
             { path: 'activity', method: RequestMethod.GET },
             { path: 'activity', method: RequestMethod.POST },
