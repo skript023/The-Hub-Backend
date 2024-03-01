@@ -161,9 +161,7 @@ export class ProductService {
 
         if (!product) throw new NotFoundException('Product data not found.');
 
-        const product_split = product.name.split('UAT ');
-        const product_name = product_split[product_split.length - 1];
-        const filename = `Deployment_to_Production_${product_name.replace(' ', '_')}.docx`;
+        const filename = `Deployment_to_Production_${product.name}.docx`;
 
         if (fs.existsSync(`./template/d2p-doc.docx`))
         {
@@ -228,7 +226,7 @@ export class ProductService {
                     product_name: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: product_name,
+                            text: product.name,
                             bold: true,
                             size: `${11}pt`,
                             font: 'Verdana'
@@ -262,7 +260,7 @@ export class ProductService {
                     product_small: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: product_name,
+                            text: product.name,
                             size: `${8}pt`,
                             font: 'Calibri'
                         })],
@@ -270,7 +268,7 @@ export class ProductService {
                     product_discount: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: product_name,
+                            text: product.name,
                             size: `${8}pt`,
                             font: 'Calibri'
                         })],
@@ -278,7 +276,7 @@ export class ProductService {
                     purpose: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: product_name,
+                            text: product.name,
                             size: `${11}pt`,
                             font: 'Verdana'
                         })],
@@ -291,6 +289,10 @@ export class ProductService {
             });
 
             fs.writeFileSync(result, document);
+
+            product.document = 'Generated';
+
+            product.save();
 
             return res.sendFile(filename, { root: './template' });
         }

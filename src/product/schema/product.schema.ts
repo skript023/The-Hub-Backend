@@ -31,8 +31,17 @@ export class Product {
     @Prop({ type: String, required: true })
     status: string;
 
+    @Prop({ type: String })
+    document: string;
+
     @Prop()
     detail: ProductDetail[];
+
+    @Prop()
+    development: ProductDetail[];
+
+    @Prop()
+    production: ProductDetail[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
