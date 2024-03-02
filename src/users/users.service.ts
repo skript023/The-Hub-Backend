@@ -99,7 +99,7 @@ export class UsersService {
             throw new UnauthorizedException();
         }
 
-        user.recent_login = new Date(user.recent_login).toISOString();
+        user.recent_login = new Date().toISOString();
 
         user.save();
 
