@@ -100,7 +100,7 @@ export class UsersService {
         }
 
         user.recent_login = new Date().toISOString();
-
+        user.expired = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString();
         user.save();
 
         return this.userModel.findById(user._id, {
