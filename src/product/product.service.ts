@@ -303,6 +303,34 @@ export class ProductService {
         res.status(404).json(this.response.json());
     }
 
+    async generateDocumentAfterD2P(id: string, res: Response)
+    {
+        const product = await this.productModel
+            .findById(id, { createdAt: 0, updatedAt: 0, __v: 0 })
+            .populate('user', ['fullname', 'username']);
+
+        if (!product) throw new NotFoundException('Product data not found.');
+
+        const filename = `D2P ${product.name}.docx`;
+        if (fs.existsSync(`./template/after-d2p-doc.docx`))
+        {
+            const result = `./template/${filename}`;
+
+            const document = await patchDocument(fs.readFileSync("./template/after-d2p-doc.docx"), {
+                patches: {
+                },
+            });
+
+            fs.writeFileSync(result, document);
+
+            product.document = 'Generated';
+
+            product.save();
+
+            return res.sendFile(filename, { root: './template' });
+        }
+    }
+
     private getCurrentDate(): string
     {
         const months = [
