@@ -1,0 +1,8 @@
+version: "3.5"
+services:
+  product-planner:
+    build: .
+    container_name: product-planner-container
+    init: true
+    ports:
+      - 3000:3000
