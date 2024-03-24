@@ -19,6 +19,7 @@ import { BasicMiddleware } from './auth/basic.middleware';
 import { ProductModule } from './product/product.module';
 import { AccountingModule } from './accounting/accounting.module';
 import connection from './util/file_manager/database';
+import { Logger } from '@nestjs/common';
 
 @Module({
     imports: [
@@ -28,7 +29,7 @@ import connection from './util/file_manager/database';
             isGlobal: true,
         }),
         MongooseModule.forRoot(
-            connection.local, { dbName: process.env.DB_CLUSTER, retryWrites: true, writeConcern: { w: 'majority' } }
+            process.env.DB_CLOUD === 'true' ? connection.cloud : connection.local, { dbName: process.env.DB_CLUSTER, retryWrites: true, writeConcern: { w: 'majority' } }
         ),
         ActivityModule,
         UsersModule,
@@ -42,6 +43,11 @@ import connection from './util/file_manager/database';
     providers: [AppService],
 })
 export class AppModule implements NestModule {
+    async onModuleInit() {
+        const isConnectedToCloud = process.env.DB_CLOUD === 'true';
+        const connectionType = isConnectedToCloud ? 'Cloud' : 'Local';
+        Logger.log(`Connected to ${connectionType} MongoDB`);
+    }
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).forRoutes(
             { path: 'auth/profile', method: RequestMethod.GET },
