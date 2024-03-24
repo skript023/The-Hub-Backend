@@ -9,7 +9,7 @@ services:
     networks:
       - pph
   rena-mongodb:
-    container_name: imost-mongodb
+    container_name: rena-mongodb
     image: mongo
     restart: unless-stopped
     ports:
