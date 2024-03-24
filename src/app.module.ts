@@ -18,6 +18,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
 import { BasicMiddleware } from './auth/basic.middleware';
 import { ProductModule } from './product/product.module';
 import { AccountingModule } from './accounting/accounting.module';
+import connection from './util/file_manager/database';
 
 @Module({
     imports: [
@@ -27,7 +28,7 @@ import { AccountingModule } from './accounting/accounting.module';
             isGlobal: true,
         }),
         MongooseModule.forRoot(
-            `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_CLUSTER}?retryWrites=true&w=majority`,
+            connection.local, { dbName: process.env.DB_CLUSTER, retryWrites: true, writeConcern: { w: 'majority' } }
         ),
         ActivityModule,
         UsersModule,
