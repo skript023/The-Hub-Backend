@@ -6,8 +6,12 @@ services:
     init: true
     ports:
       - 3000:3000
+    depends_on:
+      - rena-mongodb
     networks:
       - pph
+    links:
+      - rena-mongodb
   rena-mongodb:
     container_name: rena-mongodb
     image: mongo
