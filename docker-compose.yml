@@ -6,8 +6,6 @@ services:
     init: true
     ports:
       - 3000:3000
-    volumes:
-      - ./app/:/usr/src/app/
     depends_on:
       - rena-mongodb
     networks:
