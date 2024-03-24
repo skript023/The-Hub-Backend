@@ -6,3 +6,27 @@ services:
     init: true
     ports:
       - 3000:3000
+    networks:
+      - pph
+  rena-mongodb:
+    container_name: imost-mongodb
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - '27117:27017'
+    expose:
+      - 27017
+    volumes:
+      - .mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ellohim023
+      MONGO_INITDB_ROOT_PASSWORD: Leonov023
+      MONGO_INITDB_DATABASE: The-Worker-Hub
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    command: mongod
+    networks:
+      - pph
+networks:
+  pph:
+    driver: bridge
