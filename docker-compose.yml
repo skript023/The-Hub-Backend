@@ -14,7 +14,7 @@ services:
       - rena-mongodb
   rena-mongodb:
     container_name: rena-mongodb
-    image: mongo:5.0
+    image: mongo:4.4
     restart: unless-stopped
     ports:
       - '27117:27017'
