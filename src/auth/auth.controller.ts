@@ -11,6 +11,7 @@ import {
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { signInDto } from './dto/sign-in.dto';
+import cookie_param from './interface/cookies';
 
 @Controller('auth')
 export class AuthController {
