@@ -30,9 +30,9 @@ export class AuthController {
         );
 
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            httpOnly: cookie.httpOnly,
+            secure: cookie.secure,
+            sameSite: cookie.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send({ message: 'Login success' });
     }
@@ -45,9 +45,9 @@ export class AuthController {
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            httpOnly: cookie.httpOnly,
+            secure: cookie.secure,
+            sameSite: cookie.sameSite,
         }).send({ message: 'Logout success' });
     }
 }
