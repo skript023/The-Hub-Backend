@@ -7,10 +7,8 @@ import {
     Post,
     Request,
     Res,
-    UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { signInDto } from './dto/sign-in.dto';
 
@@ -30,9 +28,9 @@ export class AuthController {
         );
 
         res.cookie('token', token, {
-            httpOnly: cookie.httpOnly,
-            secure: cookie.secure,
-            sameSite: cookie.sameSite,
+            httpOnly: cookie_param.httpOnly,
+            secure: cookie_param.secure,
+            sameSite: cookie_param.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send({ message: 'Login success' });
     }
@@ -45,9 +43,9 @@ export class AuthController {
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('token', {
-            httpOnly: cookie.httpOnly,
-            secure: cookie.secure,
-            sameSite: cookie.sameSite,
+            httpOnly: cookie_param.httpOnly,
+            secure: cookie_param.secure,
+            sameSite: cookie_param.sameSite,
         }).send({ message: 'Logout success' });
     }
 }
