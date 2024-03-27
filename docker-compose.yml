@@ -1,36 +1,32 @@
 version: "3.5"
 services:
-  product-planner:
+  rena-server:
     build: .
-    container_name: product-planner-container
+    container_name: rena-server-container
     init: true
     ports:
       - 3000:3000
-    depends_on:
-      - rena-mongodb
     networks:
-      - pph
-    links:
-      - rena-mongodb
-  rena-mongodb:
-    container_name: rena-mongodb
-    image: mongo:4.4
-    restart: unless-stopped
-    ports:
-      - '27017:27017'
-    expose:
-      - 27017
-    volumes:
-      - .mongodb:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ellohim023
-      MONGO_INITDB_ROOT_PASSWORD: Leonov023
-      MONGO_INITDB_DATABASE: The-Worker-Hub
-      MONGODB_DATA_DIR: /data/db
-      MONDODB_LOG_DIR: /dev/null
-    command: mongod
-    networks:
-      - pph
+      - rena
+  # rena-mongodb:
+  #   container_name: rena-mongodb
+  #   image: mongo:4.4
+  #   restart: unless-stopped
+  #   ports:
+  #     - '27017:27017'
+  #   expose:
+  #     - 27017
+  #   volumes:
+  #     - .mongodb:/data/db
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ellohim023
+  #     MONGO_INITDB_ROOT_PASSWORD: Leonov023
+  #     MONGO_INITDB_DATABASE: The-Worker-Hub
+  #     MONGODB_DATA_DIR: /data/db
+  #     MONDODB_LOG_DIR: /dev/null
+  #   command: mongod
+  #   networks:
+  #     - pph
 networks:
-  pph:
+  rena:
     driver: bridge
