@@ -18,7 +18,7 @@ import { AuthMiddleware } from './auth/auth.middleware';
 import { BasicMiddleware } from './auth/basic.middleware';
 import { ProductModule } from './product/product.module';
 import { AccountingModule } from './accounting/accounting.module';
-import connection from './util/file_manager/database';
+import connection from './util/database/database';
 import { Logger } from '@nestjs/common';
 
 @Module({
