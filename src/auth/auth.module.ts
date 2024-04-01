@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../users/schema/user.schema';
 import response from '../interfaces/response.dto';
 import { RoleSchema } from '../role/schema/role.schema';
+import { GoogleStrategy } from './google/google.strategy';
 
 @Module({
     imports: [
@@ -22,7 +23,7 @@ import { RoleSchema } from '../role/schema/role.schema';
             signOptions: { expiresIn: '1h' },
         }),
     ],
-    providers: [AuthService, UsersService, response<User>],
+    providers: [AuthService, UsersService, response<User>, GoogleStrategy],
     controllers: [AuthController],
     exports: [AuthService],
 })

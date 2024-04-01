@@ -5,13 +5,15 @@ import {
     HttpCode,
     HttpStatus,
     Post,
-    Request,
+    Req,
     Res,
+    UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { signInDto } from './dto/sign-in.dto';
 import cookie_param from './interface/cookies';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +39,7 @@ export class AuthController {
     }
 
     @Get('profile')
-    async getProfile(@Request() req): Promise<any> {
+    async getProfile(@Req() req: any): Promise<any> {
         return req.user;
     }
 
@@ -48,5 +50,15 @@ export class AuthController {
             secure: cookie_param.secure,
             sameSite: cookie_param.sameSite,
         }).send({ message: 'Logout success' });
+    }
+
+    @Get('google')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth(@Req() req: Request) {}
+
+    @Get('google/redirect')
+    @UseGuards(AuthGuard('google'))
+    googleAuthRedirect(@Req() req: Request) {
+        return this.authService.googleLogin(req)
     }
 }

@@ -85,9 +85,9 @@ export class UsersService {
         return this.response.json();
     }
 
-    async login(username: string, password: string): Promise<User> {
+    async login(identity: string, password: string): Promise<User> {
         const user = await this.userModel.findOne(
-            { username },
+            { $or: [{ username: identity }, { email: identity }]},
             { createdAt: 0, updatedAt: 0, __v: 0 },
         );
 
@@ -173,7 +173,7 @@ export class UsersService {
         }
     }
 
-    private async does_user_exist(userCreation: CreateUserDto): Promise<boolean>
+    async does_user_exist(userCreation: CreateUserDto): Promise<boolean>
     {
         const user = await this.userModel.find({
                 $or: [
