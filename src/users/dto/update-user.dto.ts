@@ -29,4 +29,5 @@ export class UpdateUserDto {
     expired: string;
     recent_login: string;
     readonly remember_token: string;
+    readonly google_id: string;
 }

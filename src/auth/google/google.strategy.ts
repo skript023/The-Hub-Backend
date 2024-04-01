@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { User } from 'src/users/schema/user.schema';
 
 config();
 
@@ -12,32 +13,33 @@ config();
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
 	constructor(private readonly authService: AuthService) {
-	super({
-		clientID: process.env.GOOGLE_CLIENT_ID,
-		clientSecret: process.env.GOOGLE_SECRET,
-		callbackURL: 'https://2e87-180-252-164-36.ngrok-free.app/auth/google/redirect',
-		scope: ['email', 'profile', 'https://www.googleapis.com/auth/spreadsheets'],
-	});
+		super({
+			clientID: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_SECRET,
+			callbackURL: 'http://localhost:3000/auth/google/redirect',
+			scope: ['email', 'profile', 'https://www.googleapis.com/auth/spreadsheets'],
+		});
 	}
 
 	async validate (accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-		const { name, emails, photos } = profile
+		const { displayName, emails, photos, id } = profile
 		const user: CreateUserDto = {
 			email: emails[0].value,
-			fullname: name.givenName + name.familyName,
+			fullname: displayName,
 			image: photos[0].value,
 			remember_token: accessToken,
 			password: 'telkom135',
 			role_id: '',
-			computer_name: 'None',
+			computer_name: '',
 			expired: new Date().toISOString(),
 			hardware_id: '',
 			recent_login: new Date().toISOString(),
-			username: name.givenName
+			username: displayName,
+			google_id: id
 		}
+		const createdUser = (await this.authService.findOrCreateUser(user)).data as User;
 		
-		console.log(profile);
-		const createdUser = await this.authService.findOrCreateUser(user);
+		console.log(createdUser);
 		
 		done(null, profile);
 	}

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
@@ -19,13 +19,25 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
-    async findOrCreateUser(user: CreateUserDto)
+    async findOrCreateUser(user: CreateUserDto): Promise<response<User>>
     {
         const exist = await this.userService.does_user_exist(user);
         const default_role = await this.roleModel.findOne({ name: 'user' });
 
         if (exist)
-            throw new BadRequestException('Username or Email already used');
+        {
+            const foundUser = await this.userModel.find({ $or: [{ username: user.username }, { email: user.email }]});
+
+            foundUser[0].remember_token = user.remember_token;
+            foundUser[0].google_id = user.google_id;
+            foundUser[0].save();
+
+            this.response.message = `Register an account success`;
+            this.response.data = foundUser[0];
+            this.response.success = true;
+
+            return this.response.json();
+        }
 
         user.password = await bcrypt.hash(user.password, 10);
 
@@ -46,8 +58,8 @@ export class AuthService {
         return this.response.json();
     }
 
-    async signIn(username: string, password: string): Promise<any> {
-        const user = await this.userService.login(username, password);
+    async signIn(identity: string, password: string): Promise<any> {
+        const user = await this.userService.login(identity, password);
 
         const encrypted = await this.encrypt(
             JSON.stringify({ _state: user._id }),
@@ -55,21 +67,35 @@ export class AuthService {
 
         const payload = { encrypted };
 
+        Logger.log(`Login success as ${user.fullname}`);
+
         return {
             token: await this.jwtService.signAsync(payload, { expiresIn: '24h' }),
         };
     }
 
-    async googleLogin(req: any) 
+    async googleLogin(req: any): Promise<any>
     {
-        if (!req.user) {
+        if (!req.user) 
+        {
           return 'No user from google'
         }
-    
+
+        const user = await this.userModel.findOne({ $and: [{ email: req.user.emails[0].value }, { google_id: req.user.id }]});
+
+        if (!user) throw new UnauthorizedException('Unauthorized user doesnt exist');
+
+        const encrypted = await this.encrypt(
+            JSON.stringify({ _state: user._id }),
+        );
+
+        const payload = { encrypted };
+
+        Logger.log(`Login success as ${user.fullname}`);
+
         return {
-          message: 'User information from google',
-          user: req.user
-        }
+            token: await this.jwtService.signAsync(payload, { expiresIn: '24h' }),
+        };
       }
 
     private async encrypt(text: string): Promise<string> {

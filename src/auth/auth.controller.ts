@@ -26,7 +26,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
     ): Promise<any> {
         const { token } = await this.authService.signIn(
-            signInDto.username,
+            signInDto.identity,
             signInDto.password,
         );
 
@@ -58,7 +58,14 @@ export class AuthController {
 
     @Get('google/redirect')
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Req() req: Request) {
-        return this.authService.googleLogin(req)
+    async googleAuthRedirect(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+        const { token } = await this.authService.googleLogin(req);
+
+        res.cookie('token', token, {
+            httpOnly: cookie_param.httpOnly,
+            secure: cookie_param.secure,
+            sameSite: cookie_param.sameSite,
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        }).send({ message: 'Login success' }); 
     }
 }

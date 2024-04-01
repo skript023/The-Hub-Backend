@@ -47,6 +47,9 @@ export class User {
 
     @Prop({ type: String, default: null })
     remember_token: string;
+
+    @Prop({ type: String, default: null })
+    google_id: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
