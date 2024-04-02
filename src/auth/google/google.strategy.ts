@@ -37,10 +37,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 			username: displayName,
 			google_id: id
 		}
+
 		const createdUser = (await this.authService.findOrCreateUser(user)).data as User;
 		
-		console.log(createdUser);
-		
-		done(null, profile);
+		done(null, createdUser);
 	}
 }
