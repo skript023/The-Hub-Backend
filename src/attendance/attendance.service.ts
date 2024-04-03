@@ -11,7 +11,7 @@ import { SheetsAppendResponse } from './dto/google/response-append.dto';
 import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
 import { credentials } from 'src/util/config/service_account';
-import { google, sheets_v4 } from 'googleapis';
+import { sheets, sheets_v4, auth } from '@googleapis/sheets';
 
 @Injectable()
 export class AttendanceService 
@@ -21,12 +21,12 @@ export class AttendanceService
 		private response: response<Attendance>
 	)
 	{
-		const auth = new google.auth.GoogleAuth({
+		const auths = new auth.GoogleAuth({
 			credentials,
 			scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Adjust scopes as needed
 		});
 
-		this.sheets = google.sheets({ version: 'v4', auth });
+		this.sheets = sheets({ version: 'v4', auth: auths });
 	}
 
 	private sheets: sheets_v4.Sheets;
