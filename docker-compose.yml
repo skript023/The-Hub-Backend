@@ -5,7 +5,7 @@ services:
     container_name: rena-server-container
     init: true
     ports:
-      - 80:3000
+      - 3000:3000
     networks:
       - rena
   # rena-mongodb:
