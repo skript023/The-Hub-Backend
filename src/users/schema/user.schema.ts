@@ -49,6 +49,9 @@ export class User {
     remember_token: string;
 
     @Prop({ type: String, default: null })
+    refresh_token: string;
+
+    @Prop({ type: String, default: null })
     google_id: string;
 }
 

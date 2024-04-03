@@ -1,0 +1,13 @@
+export const credentials = {
+	type: "service_account",
+	project_id: "attendance-419004",
+	private_key_id: "530d057c69094e919c5ecd77aea893b9389d0b7c",
+	private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC43HsxXf6Buj5J\n9xkGZtGUpvlJlRRU4J8gTznZNrAUPqCkug5VXehvr6DRIVWQ1ac4Ipnd/gcy+RBn\npUFwIJ8mPzcSgBaGMgQM5v9LifbHEOOmx3aWdPeB42i3u+diUBGiITQ4nbucvxoo\nD2rUoztxmfzB+/Ii7jeDc1WG5wBWAN1e8ug8UNPmuvCrh4EI2yruqDNpH4lBiZ++\nQIgARFyDuNJTnKlPJkEuq75TBGGs4f1oVBrLlK7an6e5WX2/52+m7BKaNRBDddDN\n+iyNKHCyFoJzgCKi5B2ZVgSbenJZOzBI3BYnlX8Ly7vn4Ipa3+fBP6YizHQMWMhK\nER4h6v8FAgMBAAECggEAPB3TYDgJeqWW+RXGyRqpwFZWjlPRU1Li3K53CQjsVQES\n2873t1I9Mwjh2vCks1+PrEUwVY11SOHPMG2A7NZm+ximr7kA2i4svAdo8WdR3eXD\nqqqGCaLLFK3gEZQlSIbyXQ/APEMrTmulNW7iFnlo7OYfWPQ2h56BZhmdMCwyI0VB\nk5k0J5yu6lwTAq+fL980l+9eGE2OoraSW0JWDYHOmIlidUUem4Fk8R9yjg54NGjL\nZKyqDK6L01Khk12tQz1SIV9LlNk23DGssCoDsFWgqvItcguhlsd3dvAUYAmEbCld\nslzUb3397mOHoptlaAfWdu0tELDHNLcTl7nCOMEyBwKBgQDvd6kkuun+TEqD8EQR\ngKXedJOTwnxF2DUYg4vEXvf2JhDCuuzDJxjCxA9BJ9yDVaOl5RCSLldyxMnmErhf\nCPtbRcvwcFsrSa3B4l9r9v731IjMFVJuD5pEsVwyH58mrQuvOXqnZKCkDSGWwFwl\ng1SJ8pJUlVgagLxI+tTbcXVl/wKBgQDFn7Z/MOOWf8d8wIRXs2vz2L1N0zGE3DCb\nOAf71C6LIS8Eztvsa0hHpIuRevkwE3kte+yHrdy+kHUOpvHUzSYdp/i6wj8VskZ1\nidnBbeB6ENPWkZNoNjug4/5Spcdi+q3C2gGTUkZ54Bhh64lFQIMQ/sIfe7cNWuNq\nt8BRbvwC+wKBgEjEmP6TWgWvkzkyqsySxlSqIipVgEQNJl1TpAZBQaJoANHb0ZSf\n7dNJlsUa4tR6EqeXywhQ0rwKdrvWVnZymUcsF4Px8JJf6lAvhQWe4e3XhNZXaFwP\nm7ZiGv0URN2Q2iseEVqKppITd3CC9b1kgi0FLFhNpZ8wHYcjyckBWkZrAoGBAJ01\nLhIELCe+wkyFQUIa4td6JS1RweS03J29duxnoBbhcOvcOqrZtQf452X1c2FBPHZo\nTIKqVh3qAJSFTX9BKv8QbhbzCwgRZ2d9H5J1+8petIXODHssGUcl11ybr/8W9z83\n+WTeYF33XK4YlnxWk2zjnD07RyUClkKApiahqSwdAoGBAOUysx6ZgTisSpkOI77v\nysGPJ7rZCQKZrNufyn9C05R8JLMerMyDqInWmKXg5zzK592g7f6sVsRqoOQKYhKI\nxpMQ9Uf0fnOtM0CYMOmHgLi/3dwE4NXAueh+CugVd3d3lngPe4XQiYDSolJYH9v0\nkGb9mTQHka+bT1aPuCdzQLkh\n-----END PRIVATE KEY-----\n",
+	client_email: "rena-apps@attendance-419004.iam.gserviceaccount.com",
+	client_id: "114654604136986867225",
+	auth_uri: "https://accounts.google.com/o/oauth2/auth",
+	token_uri: "https://oauth2.googleapis.com/token",
+	auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+	client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/rena-apps%40attendance-419004.iam.gserviceaccount.com",
+	universe_domain: "googleapis.com"
+}

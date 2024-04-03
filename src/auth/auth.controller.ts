@@ -12,7 +12,7 @@ import {
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { signInDto } from './dto/sign-in.dto';
-import cookie_param from './interface/cookies';
+import { cookie_dev, cookie_prod } from './interface/cookies';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
@@ -31,9 +31,9 @@ export class AuthController {
         );
 
         res.cookie('token', token, {
-            httpOnly: cookie_param.httpOnly,
-            secure: cookie_param.secure,
-            sameSite: cookie_param.sameSite,
+            httpOnly: cookie_dev.httpOnly,
+            secure: cookie_dev.secure,
+            sameSite: cookie_dev.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send({ message: 'Login success' });
     }
@@ -46,9 +46,9 @@ export class AuthController {
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('token', {
-            httpOnly: cookie_param.httpOnly,
-            secure: cookie_param.secure,
-            sameSite: cookie_param.sameSite,
+            httpOnly: cookie_dev.httpOnly,
+            secure: cookie_dev.secure,
+            sameSite: cookie_dev.sameSite,
         }).send({ message: 'Logout success' });
     }
 
@@ -62,9 +62,9 @@ export class AuthController {
         const { token } = await this.authService.googleLogin(req);
 
         res.cookie('token', token, {
-            httpOnly: cookie_param.httpOnly,
-            secure: cookie_param.secure,
-            sameSite: cookie_param.sameSite,
+            httpOnly: cookie_dev.httpOnly,
+            secure: cookie_dev.secure,
+            sameSite: cookie_dev.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send(`
         <!DOCTYPE html>

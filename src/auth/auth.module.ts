@@ -9,6 +9,7 @@ import { User, UserSchema } from '../users/schema/user.schema';
 import response from '../interfaces/response.dto';
 import { RoleSchema } from '../role/schema/role.schema';
 import { GoogleStrategy } from './google/google.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { GoogleStrategy } from './google/google.strategy';
             secret: process.env.SECRET,
             signOptions: { expiresIn: '1h' },
         }),
+        PassportModule.register({ defaultStrategy: 'google' }),
     ],
     providers: [AuthService, UsersService, response<User>, GoogleStrategy],
     controllers: [AuthController],

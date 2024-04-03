@@ -1,7 +1,5 @@
 const googleSheets = `https://sheets.googleapis.com/v4/spreadsheets`;
 
-const google = {
+export const google_api = {
     sheets: googleSheets
 }
-
-export default google;

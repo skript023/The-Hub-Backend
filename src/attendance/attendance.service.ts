@@ -6,11 +6,12 @@ import { Attendance } from './schema/attendance.schema';
 import response from 'src/interfaces/response.dto';
 import mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import google from './api/google';
 import { date } from 'src/util/date/date_format';
 import { SheetsAppendResponse } from './dto/google/response-append.dto';
 import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
+import { credentials } from 'src/util/config/service_account';
+import { google, sheets_v4 } from 'googleapis';
 
 @Injectable()
 export class AttendanceService 
@@ -19,21 +20,20 @@ export class AttendanceService
 		@InjectModel(Attendance.name) private attendanceModel: mongoose.Model<Attendance>,
 		private response: response<Attendance>
 	)
-	{}
+	{
+		const auth = new google.auth.GoogleAuth({
+			credentials,
+			scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Adjust scopes as needed
+		});
+
+		this.sheets = google.sheets({ version: 'v4', auth });
+	}
 
 	private defaultRow = 3;
+	private sheets: sheets_v4.Sheets;
 
 	async create(req: any, createAttendanceDto: CreateAttendanceDto) 
 	{
-		const params = `?valueInputOption=${ValueInputOption.USER_ENTERED}&includeValuesInResponse=true&insertDataOption=${InsertDataOption.INSERT_ROWS}`;
-
-		const config: AxiosRequestConfig = {
-			headers: {
-				'Authorization': `Bearer ${req.user.remember_token}`,
-				'Content-Type': 'application/json'
-			},
-		};
-
 		const data = {
 			"range": `${date.getCurrentMonth()}!A:E`,
 			"majorDimension": "ROWS",
@@ -48,22 +48,27 @@ export class AttendanceService
 			]
 		}
 
-		const response = await axios.post(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${date.getCurrentMonth()}!A:E:append${params}`, data, config);
+		const response = await this.sheets.spreadsheets.values.append({
+			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			range: `${date.getCurrentMonth()}!A:E`, // Specify the range
+			valueInputOption: ValueInputOption.USER_ENTERED,
+			includeValuesInResponse: true,
+			insertDataOption: InsertDataOption.INSERT_ROWS,
+			requestBody: data,
+		});
 
 		if (response.status != 200)
 		{
 			throw new HttpException(`${response.data}`, response.status);
 		}
 
-
-		const sheetsResponse = response.data as SheetsAppendResponse;
+		const sheetsResponse = response.data;
 		createAttendanceDto.range = sheetsResponse.updates.updatedRange;
 
 		const attendance = await this.attendanceModel.create(createAttendanceDto);
 
 		this.response.success = true;
 		this.response.message = `Success checked attendance at ${attendance.date}`;
-		this.response.data = response.data;
 
 		return this.response.json();
 	}
@@ -126,11 +131,10 @@ export class AttendanceService
 	{
 		const attendance = await this.attendanceModel.findById(id);
 
-		const params = `?valueInputOption=${ValueInputOption.USER_ENTERED}&includeValuesInResponse=true`;
+		const params = `?valueInputOption=${ValueInputOption.USER_ENTERED}&includeValuesInResponse=true&key=${process.env.GOOGLE_API_KEY}`;
 
 		const config: AxiosRequestConfig = {
 			headers: {
-				'Authorization': `Bearer ${req.user.remember_token}`,
 				'Content-Type': 'application/json'
 			},
 		};
@@ -149,7 +153,13 @@ export class AttendanceService
 			]
 		}
 		
-		const response = await axios.put(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${attendance.range}${params}`, data, config);
+		const response = await this.sheets.spreadsheets.values.update({
+			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			range: `${attendance.range}`, // Specify the range
+			valueInputOption: ValueInputOption.USER_ENTERED,
+			includeValuesInResponse: true,
+			requestBody: data,
+		});
 
 		if (response.status != 200)
 		{
@@ -166,17 +176,14 @@ export class AttendanceService
 
 	async remove(id: string, req: any) 
 	{
-		const config: AxiosRequestConfig = {
-			headers: {
-				'Authorization': `Bearer ${req.user.remember_token}`
-			},
-		};
-		
 		const attendance = await this.attendanceModel.findById(id);
 
         if (!attendance) throw new NotFoundException('Attendance not found, unable to delete');
 
-		const response = await axios.post(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${attendance.range}:clear`, null, config);
+		const response = await this.sheets.spreadsheets.values.clear({
+			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			range: `${attendance.range}`,
+		});
 
 		if (response.status != 200)
 		{

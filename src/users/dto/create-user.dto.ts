@@ -18,6 +18,7 @@ export class CreateUserDto {
     image: string;
     expired: string;
     recent_login: string;
-    readonly remember_token: string;
+    remember_token: string;
+    refresh_token: string;
     readonly google_id: string;
 }

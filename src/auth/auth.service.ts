@@ -26,11 +26,11 @@ export class AuthService {
 
         if (exist)
         {
-            const foundUser = await this.userModel.find({ $or: [{ username: user.username }, { email: user.email }]});
+            const foundUser = await this.userModel.findOne({ $and: [{ google_id: user.google_id }, { email: user.email }]});
 
-            foundUser[0].remember_token = user.remember_token;
-            foundUser[0].google_id = user.google_id;
-            foundUser[0].save();
+            foundUser.remember_token = user.remember_token;
+            foundUser.google_id = user.google_id;
+            foundUser.save();
 
             this.response.message = `Register an account success`;
             this.response.data = foundUser[0];
@@ -80,6 +80,8 @@ export class AuthService {
         {
           return 'No user from google'
         }
+
+        const createdUser = (await this.findOrCreateUser(req.user)).data as User;
 
         const user = await this.userModel.findOne({ $and: [{ email: req.user.email }, { google_id: req.user.google_id }]});
 
