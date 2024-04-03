@@ -1,0 +1,26 @@
+name: Deploy to Server
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ['main']
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy code
+        run: |
+          ssh -o StrictHostKeyChecking=no skript023@103.127.97.223 "cd /var/www/rena.telkom.co.id/backend && git pull origin main"
