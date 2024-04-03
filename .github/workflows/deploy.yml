@@ -20,10 +20,16 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
+
       - name: Set safe directory
-        run: git config --global --add safe.directory /var/www/rena.telkom.co.id/backend
+        run: ssh -o StrictHostKeyChecking=no skript023@103.127.97.223 "git config --global --add safe.directory /var/www/rena.telkom.co.id/backend"
+
+      - name: Stop existing Docker containers
+        run: ssh user@your-server-ip "cd /var/www/rena.telkom.co.id/backend && docker-compose down"
 
       - name: Deploy code
         run: |
           ssh -o StrictHostKeyChecking=no skript023@103.127.97.223 "cd /var/www/rena.telkom.co.id/backend && git pull origin main"
+
+      - name: Build and start Docker containers
+        run: ssh user@your-server-ip "cd /var/www/rena.telkom.co.id/backend && docker-compose up --build -d"
