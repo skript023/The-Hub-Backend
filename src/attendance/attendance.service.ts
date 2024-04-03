@@ -148,7 +148,6 @@ export class AttendanceService
 				]
 			]
 		}
-		console.log(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${attendance.range}${params}`);
 		
 		const response = await axios.put(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${attendance.range}${params}`, data, config);
 
@@ -174,7 +173,6 @@ export class AttendanceService
 		};
 		
 		const attendance = await this.attendanceModel.findById(id);
-		console.log(`${google.sheets}/1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc/values/${attendance.range}:clear`);
 
         if (!attendance) throw new NotFoundException('Attendance not found, unable to delete');
 
