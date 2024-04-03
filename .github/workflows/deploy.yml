@@ -20,6 +20,9 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: Set safe directory
+        run: git config --global --add safe.directory /var/www/rena.telkom.co.id/backend
 
       - name: Deploy code
         run: |
