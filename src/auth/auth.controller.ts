@@ -31,9 +31,9 @@ export class AuthController {
         );
 
         res.cookie('token', token, {
-            httpOnly: cookie_dev.httpOnly,
-            secure: cookie_dev.secure,
-            sameSite: cookie_dev.sameSite,
+            httpOnly: cookie_prod.httpOnly,
+            secure: cookie_prod.secure,
+            sameSite: cookie_prod.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send({ message: 'Login success' });
     }
@@ -46,9 +46,9 @@ export class AuthController {
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('token', {
-            httpOnly: cookie_dev.httpOnly,
-            secure: cookie_dev.secure,
-            sameSite: cookie_dev.sameSite,
+            httpOnly: cookie_prod.httpOnly,
+            secure: cookie_prod.secure,
+            sameSite: cookie_prod.sameSite,
         }).send({ message: 'Logout success' });
     }
 
@@ -62,9 +62,9 @@ export class AuthController {
         const { token } = await this.authService.googleLogin(req);
 
         res.cookie('token', token, {
-            httpOnly: cookie_dev.httpOnly,
-            secure: cookie_dev.secure,
-            sameSite: cookie_dev.sameSite,
+            httpOnly: cookie_prod.httpOnly,
+            secure: cookie_prod.secure,
+            sameSite: cookie_prod.sameSite,
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         }).send(`
         <!DOCTYPE html>
