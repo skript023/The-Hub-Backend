@@ -86,6 +86,12 @@ export class AppModule implements NestModule {
             { path: 'accounting/:id', method: RequestMethod.GET },
             { path: 'accounting/:id', method: RequestMethod.PATCH },
             { path: 'accounting/:id', method: RequestMethod.DELETE },
+
+            { path: 'attendance', method: RequestMethod.GET },
+            { path: 'attendance', method: RequestMethod.POST },
+            { path: 'attendance/:id', method: RequestMethod.GET },
+            { path: 'attendance/:id', method: RequestMethod.PATCH },
+            { path: 'attendance/:id', method: RequestMethod.DELETE },
         );
 
         consumer.apply(BasicMiddleware).forRoutes({

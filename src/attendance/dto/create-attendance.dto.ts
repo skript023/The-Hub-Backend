@@ -2,6 +2,8 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateAttendanceDto 
 {
+    user_id: string;
+    range: string;
     @IsNotEmpty()
     date: string;
     @IsNotEmpty()

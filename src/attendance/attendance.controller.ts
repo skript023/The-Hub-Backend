@@ -8,27 +8,27 @@ export class AttendanceController {
 	constructor(private readonly attendanceService: AttendanceService) {}
 
 	@Post()
-	create(@Body() createAttendanceDto: CreateAttendanceDto) {
-		return this.attendanceService.create(createAttendanceDto);
+	create(@Req() req: any, @Body() createAttendanceDto: CreateAttendanceDto) {
+		return this.attendanceService.create(req, createAttendanceDto);
 	}
 
 	@Get()
-	findAll(@Req() req: any) {
-		return this.attendanceService.findAll(req);
+	findAll() {
+		return this.attendanceService.findAll();
 	}
 
 	@Get(':id')
-	findOne(@Param('id') id: string, @Req() req: any) {
+	findOne(@Param('id') id: string) {
 		return this.attendanceService.findOne(id);
 	}
 
 	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-		return this.attendanceService.update(id, updateAttendanceDto);
+	update(@Param('id') id: string, @Req() req: any, @Body() updateAttendanceDto: UpdateAttendanceDto) {
+		return this.attendanceService.update(id, updateAttendanceDto, req);
 	}
 
 	@Delete(':id')
-	remove(@Param('id') id: string) {
-		return this.attendanceService.remove(id);
+	remove(@Param('id') id: string, @Req() req: any) {
+		return this.attendanceService.remove(id, req);
 	}
 }

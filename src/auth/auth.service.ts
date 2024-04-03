@@ -81,7 +81,7 @@ export class AuthService {
           return 'No user from google'
         }
 
-        const user = await this.userModel.findOne({ $and: [{ email: req.user.emails[0].value }, { google_id: req.user.id }]});
+        const user = await this.userModel.findOne({ $and: [{ email: req.user.email }, { google_id: req.user.google_id }]});
 
         if (!user) throw new UnauthorizedException('Unauthorized user doesnt exist');
 

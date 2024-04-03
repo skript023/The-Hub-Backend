@@ -16,12 +16,16 @@ export class Attendance
 {
     @Prop({ type: mongoose.SchemaTypes.ObjectId, auto: true })
     _id: string;
+    @Prop({ type: mongoose.SchemaTypes.ObjectId, default: null })
+    user_id: string;
+    @Prop({ type: String, default: null })
+    range: string;
     @Prop({ type: String, default: null })
     date: string;
     @Prop({ type: String, default: null })
-    type: string;
+    type: Type;
     @Prop({ type: String, default: null })
-    jenis: string;
+    jenis: Jenis;
     @Prop({ type: String, default: null })
     deskripsi: string;
     @Prop({ type: String, default: null })
@@ -31,3 +35,12 @@ export class Attendance
     @Prop({ type: String, default: null })
     justifikasi_agenda: string;
 }
+
+export const AttendanceSchema = SchemaFactory.createForClass(Attendance);
+
+AttendanceSchema.virtual('user', {
+    ref: 'User',
+    localField: 'user_id',
+    foreignField: '_id',
+    justOne: true
+});
