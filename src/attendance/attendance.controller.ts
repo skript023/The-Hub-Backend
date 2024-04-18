@@ -8,8 +8,8 @@ export class AttendanceController {
 	constructor(private readonly attendanceService: AttendanceService) {}
 
 	@Post()
-	create(@Req() req: any, @Body() createAttendanceDto: CreateAttendanceDto) {
-		return this.attendanceService.create(req, createAttendanceDto);
+	create(@Body() createAttendanceDto: CreateAttendanceDto) {
+		return this.attendanceService.create(createAttendanceDto);
 	}
 
 	@Get()
@@ -23,12 +23,12 @@ export class AttendanceController {
 	}
 
 	@Patch(':id')
-	update(@Param('id') id: string, @Req() req: any, @Body() updateAttendanceDto: UpdateAttendanceDto) {
-		return this.attendanceService.update(id, updateAttendanceDto, req);
+	update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
+		return this.attendanceService.update(id, updateAttendanceDto);
 	}
 
 	@Delete(':id')
-	remove(@Param('id') id: string, @Req() req: any) {
-		return this.attendanceService.remove(id, req);
+	remove(@Param('id') id: string) {
+		return this.attendanceService.remove(id);
 	}
 }

@@ -32,7 +32,7 @@ export class AttendanceService
 
 	private sheets: sheets_v4.Sheets;
 
-	async create(req: any, createAttendanceDto: CreateAttendanceDto) 
+	async create(createAttendanceDto: CreateAttendanceDto) 
 	{
 		const data = {
 			"range": `${date.getCurrentMonth()}!A:E`,
@@ -105,7 +105,7 @@ export class AttendanceService
 		return this.response.json();
 	}
 
-	async update(id: string, updateAttendanceDto: UpdateAttendanceDto, req: any) 
+	async update(id: string, updateAttendanceDto: UpdateAttendanceDto) 
 	{
 		const attendance = await this.attendanceModel.findById(id);
 
@@ -152,7 +152,7 @@ export class AttendanceService
 		return this.response.json();
 	}
 
-	async remove(id: string, req: any) 
+	async remove(id: string) 
 	{
 		const attendance = await this.attendanceModel.findById(id);
 
@@ -189,5 +189,7 @@ export class AttendanceService
 		absen.durasi = '08.00 - 17.00';
 		absen.jenis = Jenis.Hadir;
 		absen.type = Type.HARI_KERJA;
+
+		return this.create(absen);
 	}
 }
