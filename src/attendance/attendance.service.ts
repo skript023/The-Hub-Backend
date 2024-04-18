@@ -12,6 +12,7 @@ import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
 import { credentials } from 'src/util/config/service_account';
 import { sheets, sheets_v4, auth } from '@googleapis/sheets';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AttendanceService 
@@ -173,5 +174,20 @@ export class AttendanceService
         this.response.success = true;
 
         return this.response.json();
+	}
+
+	@Cron('0 30 07 * * 1-5',  {
+		name: 'notifications',
+		timeZone: 'Asia/Jakarta',
+	})
+	async absen()
+	{
+		const absen = new CreateAttendanceDto()
+
+		absen.date = date.indonesiaFormat(new Date());
+		absen.deskripsi = '';
+		absen.durasi = '08.00 - 17.00';
+		absen.jenis = Jenis.Hadir;
+		absen.type = Type.HARI_KERJA;
 	}
 }

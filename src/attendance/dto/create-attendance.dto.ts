@@ -10,7 +10,6 @@ export class CreateAttendanceDto
     type: string;
     @IsNotEmpty()
     jenis: string;
-    @IsNotEmpty()
     deskripsi: string;
     @IsNotEmpty()
     durasi: string;

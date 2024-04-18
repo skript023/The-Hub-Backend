@@ -245,7 +245,7 @@ export class ProductService {
                     signer: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: process.env.SIGNER,
+                            text: btoa(process.env.SIGNER),
                             size: `${11}pt`,
                             font: 'Verdana'
                         })]
