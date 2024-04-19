@@ -21,15 +21,53 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Create directory
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -d '/var/www/rena.telkom.co.id' ]; then 
+            sudo mkdir -p /var/www/rena.telkom.co.id 
+          else 
+            echo Directory '/var/www/rena.telkom.co.id already exists.'
+          fi"
+      
+      - name: Deploy from repository
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -d '/var/www/rena.telkom.co.id/backend' ]; then 
+            cd /var/www/rena.telkom.co.id && sudo git clone https://github.com/${{ github.repository }} backend; 
+          else 
+            cd /var/www/rena.telkom.co.id/backend && sudo git pull origin main; 
+          fi"
+
       - name: Set safe directory
         run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /var/www/rena.telkom.co.id/backend"
 
       - name: Stop existing Docker containers
         run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo docker-compose down"
 
-      - name: Deploy code
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo git pull origin main"
-
       - name: Build and start Docker containers
         run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo docker-compose up --build -d"
+      
+      - name: Create nginx setting and restart nginx
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -f '/etc/nginx/sites-available/rena.telkom.co.id' ]; then
+            sudo cp -f /var/www/rena.telkom.co.id/frontend_imost/rena.telkom.co.id /etc/nginx/sites-available
+          else
+            echo 'Nginx config already exist'
+          fi"
+      
+      - name: Create symlink between available nginx site to enabled
+        run : | 
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -f '/etc/nginx/sites-enabled/rena.telkom.co.id' ]; then
+            ln -s /etc/nginx/sites-available/rena.telkom.co.id /etc/nginx/sites-enabled/
+          else
+            echo 'File exist'
+          fi"
+
+      - name: Check nginx config
+        run : ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "sudo nginx -t"
+            
+      - name: Restart nginx
+        run : ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "sudo systemctl restart nginx"

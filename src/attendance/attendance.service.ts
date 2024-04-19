@@ -196,7 +196,7 @@ export class AttendanceService
 		return this.create(absen);
 	}
 
-	@Cron('0 01 17 * * 5',  {
+	@Cron('0 55 16 * * 5',  {
 		name: 'notifications',
 		timeZone: 'Asia/Jakarta',
 	})
@@ -213,9 +213,7 @@ export class AttendanceService
 		});
 
 		report.date = date.indonesiaFormat(new Date());
-		const description = activities.map(activity => activity.name).join(`
-		
-		`)
+		const description = activities.map(activity => activity.name).join(`\n`)
 
 		report.deskripsi = `
 			${description}
@@ -224,8 +222,15 @@ export class AttendanceService
 		report.jenis = 'Weekly Report';
 		report.type = 'Hari Kerja';
 
-		Logger.log(`Weekly report automatically sent, task is ${activities}`);
+		const weekly = await this.create(report);
 
-		return this.create(report);
+		if (weekly.success)
+		{
+			Logger.log(`Weekly report automatically sent, task is ${activities}`);
+
+			return weekly.json();
+		}
+
+		return weekly.json();
 	}
 }
