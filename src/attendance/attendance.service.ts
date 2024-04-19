@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import axios, { AxiosRequestConfig } from 'axios';
@@ -176,19 +176,20 @@ export class AttendanceService
         return this.response.json();
 	}
 
-	@Cron('0 30 07 * * 1-5',  {
+	@Cron('0 01 07 * * 1-5',  {
 		name: 'notifications',
 		timeZone: 'Asia/Jakarta',
 	})
 	async absen()
 	{
-		const absen = new CreateAttendanceDto()
+		Logger.log('Absen automatically sent');
+		const absen = new CreateAttendanceDto();
 
 		absen.date = date.indonesiaFormat(new Date());
 		absen.deskripsi = '';
 		absen.durasi = '08.00 - 17.00';
-		absen.jenis = Jenis.Hadir;
-		absen.type = Type.HARI_KERJA;
+		absen.jenis = 'Hadir';
+		absen.type = 'Hari Kerja';
 
 		return this.create(absen);
 	}
