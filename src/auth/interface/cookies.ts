@@ -1,8 +1,8 @@
 
 export const cookie_prod = {
     httpOnly: true,
-    secure: false,
-    sameSite: 'strict' as boolean | 'lax' | 'strict' | 'none' | undefined
+    secure: true,
+    sameSite: 'none' as boolean | 'lax' | 'strict' | 'none' | undefined
 }
 
 export const cookie_dev = {
