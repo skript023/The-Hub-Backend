@@ -12,13 +12,15 @@ import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
 import { credentials } from 'src/util/config/service_account';
 import { sheets, sheets_v4, auth } from '@googleapis/sheets';
-import { Cron } from '@nestjs/schedule';
+import { Cron, Interval } from '@nestjs/schedule';
+import { Activity } from 'src/activity/schema/activity.schema';
 
 @Injectable()
 export class AttendanceService 
 {
 	constructor(
 		@InjectModel(Attendance.name) private attendanceModel: mongoose.Model<Attendance>,
+		@InjectModel(Activity.name) private activityModel: mongoose.Model<Activity>,
 		private response: response<Attendance>
 	)
 	{
@@ -192,5 +194,38 @@ export class AttendanceService
 		absen.type = 'Hari Kerja';
 
 		return this.create(absen);
+	}
+
+	@Cron('0 01 17 * * 5',  {
+		name: 'notifications',
+		timeZone: 'Asia/Jakarta',
+	})
+	async weeklyReport()
+	{
+		const report = new CreateAttendanceDto();
+
+		const monday = date.getMondayDate();
+		const friday = date.getFridayDate();
+
+		const activities = await this.activityModel.find({ 
+			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			createdAt: { $gte: monday, $lte: friday } 
+		});
+
+		report.date = date.indonesiaFormat(new Date());
+		const description = activities.map(activity => activity.name).join(`
+		
+		`)
+
+		report.deskripsi = `
+			${description}
+		`;
+		report.durasi = '08.00 - 17.00';
+		report.jenis = 'Weekly Report';
+		report.type = 'Hari Kerja';
+
+		Logger.log(`Weekly report automatically sent, task is ${activities}`);
+
+		return this.create(report);
 	}
 }
