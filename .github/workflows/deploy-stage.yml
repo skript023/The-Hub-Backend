@@ -29,6 +29,9 @@ jobs:
           else 
             echo Directory '/var/www/rena.telkom.co.id already exists.'
           fi"
+
+      - name: Set safe directory
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /var/www/rena.telkom.co.id/backend"
       
       - name: Deploy from repository
         run: |
@@ -39,14 +42,8 @@ jobs:
             cd /var/www/rena.telkom.co.id/backend && sudo git pull origin main; 
           fi"
 
-      - name: Set safe directory
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /var/www/rena.telkom.co.id/backend"
-
-      - name: Stop existing Docker containers
-        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo docker-compose down"
-
       - name: Build and start Docker containers
-        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo docker-compose up --build -d"
+        run: ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /var/www/rena.telkom.co.id/backend && sudo docker compose up --build -d"
       
       - name: Create nginx setting and restart nginx
         run: |
