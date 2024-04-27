@@ -178,8 +178,8 @@ export class AttendanceService
         return this.response.json();
 	}
 
-	@Cron('0 01 07 * * 1-5',  {
-		name: 'notifications',
+	@Cron('0 10 07 * * 1-5',  {
+		name: 'Absen',
 		timeZone: 'Asia/Jakarta',
 	})
 	async absen()
@@ -197,7 +197,7 @@ export class AttendanceService
 	}
 
 	@Cron('0 55 16 * * 5',  {
-		name: 'notifications',
+		name: 'Weekly Report',
 		timeZone: 'Asia/Jakarta',
 	})
 	async weeklyReport()
