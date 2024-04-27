@@ -1,7 +1,7 @@
 server {
     # Listen on port 80
     listen 80;
-    server_name dashboard.rena.my.id;
+    server_name server.rena.my.id;
 
     # Define location for forwarding requests to your C++ application
     location / {
