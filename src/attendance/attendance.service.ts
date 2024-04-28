@@ -10,10 +10,10 @@ import { date } from 'src/util/date/date_format';
 import { SheetsAppendResponse } from './dto/google/response-append.dto';
 import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
-import { credentials } from 'src/util/config/service_account';
 import { sheets, sheets_v4, auth } from '@googleapis/sheets';
 import { Cron, Interval } from '@nestjs/schedule';
 import { Activity } from 'src/activity/schema/activity.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AttendanceService 
@@ -21,9 +21,12 @@ export class AttendanceService
 	constructor(
 		@InjectModel(Attendance.name) private attendanceModel: mongoose.Model<Attendance>,
 		@InjectModel(Activity.name) private activityModel: mongoose.Model<Activity>,
-		private response: response<Attendance>
+		private response: response<Attendance>,
+		private configService: ConfigService
 	)
 	{
+		const credentials = this.configService.get('google');
+		
 		const auths = new auth.GoogleAuth({
 			credentials,
 			scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Adjust scopes as needed
