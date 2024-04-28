@@ -35,7 +35,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -f '/var/www/rena.telkom.co.id/backend/google.json' ]; then 
             echo '{
-                "type": "service_account",
+                "type": "'"service_account"'",
                 "project_id": "'"${{ secrets.PROJECT_ID }}"'",
                 "private_key_id": "'"${{ secrets.PRIVATE_KEY_ID }}"'",
                 "private_key": "'"${{ secrets.PRIVATE_KEY }}"'",
@@ -45,7 +45,7 @@ jobs:
                 "token_uri": "'"${{ secrets.TOKEN_URI }}"'",
                 "auth_provider_x509_cert_url": "'"${{ secrets.AUTH_PROVIDER }}"'",
                 "client_x509_cert_url": "'"${{ secrets.CLIENT_CERT_URL }}"'",
-                "universe_domain": "googleapis.com"
+                "universe_domain": "'"googleapis.com"'"
             }' > /var/www/rena.telkom.co.id/backend/google.json; 
           else 
             echo "google.json already exists remotely. Skipping creation."; 
