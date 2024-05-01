@@ -8,7 +8,7 @@ class date_format
         ],
 
         indonesia: [
-            'Januari', 'Februari', 'Maret', 'April', 'Mai', 'Juni',
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
             'Juli', 'Augustus', 'September', 'Oktober', 'November', 'Desember'
         ]
     };
