@@ -12,10 +12,10 @@ async function bootstrap() {
         origin: (origin, callback) => {
             if (whitelist.indexOf(origin) !== -1) 
             {
-              Logger.log(`Requested by ${origin}`, 'Whitelist');
+              Logger.log(`Allow request from ${origin}`, 'Whitelist');
 
               callback(null, true);
-            } 
+            }
             else 
             {
               Logger.warn(`Blocked request from ${origin}`);    
