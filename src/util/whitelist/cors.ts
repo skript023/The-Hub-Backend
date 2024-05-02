@@ -4,12 +4,13 @@ import { Logger } from '@nestjs/common';
 export const whitelist = [
     'https://www.rena.my.id',
     'https://dashboard.rena.my.id',
-    'https://server.rena.my.id',
-    'http://localhost:3000',
     'http://localhost:5173',
 ]
 
 export const options: CorsOptions = {
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1) 
         {
@@ -30,6 +31,4 @@ export const options: CorsOptions = {
           callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-    credentials: true,
 }
