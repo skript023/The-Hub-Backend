@@ -12,19 +12,18 @@ async function bootstrap() {
         origin: (origin, callback) => {
             if (whitelist.indexOf(origin) !== -1) 
             {
-              Logger.log("Allowed cors for:", origin);
+              Logger.log(`Requested by ${origin}`, 'Whitelist');
 
               callback(null, true);
             } 
             else 
             {
-              Logger.warn("blocked cors for:", origin);
+              Logger.warn(`Blocked request from ${origin}`);    
 
               callback(new Error('Not allowed by CORS'));
             }
         },
-        allowedHeaders: ['X-Requested-With', 'X-HTTP-Method-Override', 'Content-Type', 'Accept', 'Observe'],
-        methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
         credentials: true,
     });
     await app.listen(3000);
