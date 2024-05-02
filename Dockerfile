@@ -30,4 +30,4 @@ FROM oven/bun:latest
 
 WORKDIR /usr/src/app
 
-ENTRYPOINT [ "bun", "dist/main.js" ]
+CMD [ "bun", "dist/main.js" ]
