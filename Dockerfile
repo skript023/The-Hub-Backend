@@ -26,8 +26,4 @@ EXPOSE 3000
 
 # Start the server using the production build
 # CMD ["./node_modules/pm2/bin/pm2-runtime", "start", "pm2.config.js", "--env", "production"]
-FROM oven/bun:latest
-
-WORKDIR /usr/src/app
-
-CMD [ "bun", "dist/main.js" ]
+ENTRYPOINT [ "npm", "run", "start:prod" ]
