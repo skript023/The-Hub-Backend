@@ -2,30 +2,18 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
-import { whitelist } from './util/whitelist/cors';
+import { options } from './util/whitelist/cors';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe());
-    app.enableCors({
-        origin: (origin, callback) => {
-            if (whitelist.indexOf(origin) !== -1) 
-            {
-              Logger.log(`Allow request from ${origin}`, 'Whitelist');
+    app.enableCors(options);
 
-              callback(null, true);
-            }
-            else 
-            {
-              Logger.warn(`Blocked request from ${origin}`);    
+    app.use(cookieParser());
+    app.use(json({ limit: '100mb' }));
+    app.use(urlencoded({ limit: '100mb', extended: false }));
 
-              callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-        credentials: true,
-    });
     await app.listen(3000);
 }
 bootstrap();

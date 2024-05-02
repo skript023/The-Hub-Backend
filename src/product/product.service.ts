@@ -23,8 +23,6 @@ export class ProductService {
         product.start_date = new Date(product.start_date).toLocaleDateString();
         product.end_date = new Date(product.end_date).toLocaleDateString();
 
-        console.log(files);
-
         if (files?.length >= 1)
         {
             for (const detail of product.detail)
@@ -78,8 +76,6 @@ export class ProductService {
     {
         products.start_date = new Date(products.start_date).toLocaleDateString();
         products.end_date = new Date(products.end_date).toLocaleDateString();
-
-        console.log(files);
 
         if (files?.length >= 1)
         {
@@ -243,7 +239,7 @@ export class ProductService {
                     signer: {
                         type: PatchType.PARAGRAPH,
                         children: [new TextRun({
-                            text: btoa(process.env.SIGNER),
+                            text: atob(process.env.SIGNER),
                             size: `${11}pt`,
                             font: 'Verdana'
                         })]
