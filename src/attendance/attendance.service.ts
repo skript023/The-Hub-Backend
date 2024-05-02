@@ -218,9 +218,7 @@ export class AttendanceService
 		report.date = date.indonesiaFormat(new Date());
 		const description = activities.map(activity => activity.name).join(`\n`)
 
-		report.deskripsi = `
-			${description}
-		`;
+		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
 		report.durasi = '08.00 - 17.00';
 		report.jenis = 'Weekly Report';
 		report.type = 'Hari Kerja';
