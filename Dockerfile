@@ -28,4 +28,6 @@ EXPOSE 3000
 # CMD ["./node_modules/pm2/bin/pm2-runtime", "start", "pm2.config.js", "--env", "production"]
 FROM oven/bun:latest
 
+WORKDIR /usr/src/app
+
 ENTRYPOINT [ "bun", "dist/main.js" ]
