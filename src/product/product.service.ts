@@ -89,8 +89,6 @@ export class ProductService {
                 {
                     detail.captures.forEach((capture, index) => {
                         capture.image = `${[products.name]}_${capture.image}`;
-
-                        console.log(files[index].originalname);
                     });
                 }
             }
