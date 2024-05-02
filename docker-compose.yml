@@ -9,6 +9,8 @@ services:
       - 3000:3000
     networks:
       - rena
+    volumes:
+      - ./storage:/usr/src/app/storage
 networks:
   rena:
     driver: bridge
