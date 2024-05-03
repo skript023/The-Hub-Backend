@@ -209,6 +209,8 @@ export class AttendanceService
 
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
+		const hour   = date.getCurrentHour();
+		const random = date.randomizeMinute();
 
 		const activities = await this.activityModel.find({ 
 			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
@@ -219,7 +221,7 @@ export class AttendanceService
 		const description = activities.map(activity => activity.name).join(`\n`)
 
 		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
-		report.durasi = '08.00 - 17.00';
+		report.durasi = `${hour} - 17:${random}`;
 		report.jenis = 'Weekly Report';
 		report.type = 'Hari Kerja';
 

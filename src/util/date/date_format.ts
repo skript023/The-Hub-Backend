@@ -42,7 +42,8 @@ class date_format
         return `${day} ${this.months.indonesia[monthIndex]} ${year}`;
     }
 
-    getMondayDate(): Date {
+    getMondayDate(): Date 
+    {
         const currentDate = new Date();
         const currentDayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
         const daysToSubtractForMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
@@ -52,14 +53,37 @@ class date_format
         return mondayDate;
     }
 
-    getFridayDate(): Date {
-        const currentDate = new Date();
-        const currentDayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+    getFridayDate(): Date 
+    {
+        const currentDate        = new Date();
+        const currentDayOfWeek   = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
         const daysToAddForFriday = currentDayOfWeek === 5 ? 0 : 5 - currentDayOfWeek;
-        const fridayDate = new Date(currentDate);
+        const fridayDate         = new Date(currentDate);
+
         fridayDate.setDate(currentDate.getDate() + daysToAddForFriday);
         fridayDate.setHours(23, 59, 59, 999); // Set time to end of the day (just before midnight)
+        
         return fridayDate;
+    }
+
+    getCurrentHour(): string 
+    {
+        const date = new Date();
+
+        const formattedTime = date.toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour: 'numeric', minute: 'numeric' });
+
+        return formattedTime;
+    }
+
+    randomizeMinute(): string
+    {
+        // Generate a random number between 0 and 59
+        const randomNumber: number = Math.floor(Math.random() * 60);
+
+        // Ensure the result is always two digits
+        const formattedNumber: string = randomNumber < 10 ? '0' + randomNumber : randomNumber.toString();
+
+        return formattedNumber;
     }
 }
 
