@@ -18,12 +18,6 @@ export const options: CorsOptions = {
 
           callback(null, true);
         }
-        else if (origin === undefined)
-        {
-            Logger.debug(`Let undefined origin passed`, 'Undefine Origin');
-            
-            callback(null, true);
-        }
         else 
         {
           Logger.warn(`Blocked request from ${origin}`);    
