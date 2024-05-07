@@ -192,7 +192,7 @@ export class AttendanceService
 		const hour   = date.getCurrentHour();
 		const random = date.randomizeMinute();
 
-		absen.date = new Date().toString();
+		absen.date = new Date().toLocaleDateString();
 		absen.deskripsi = '';
 		absen.durasi = `${hour} - 17.${random}`;
 		absen.jenis = 'Hadir';
