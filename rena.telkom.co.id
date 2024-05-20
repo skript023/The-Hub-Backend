@@ -13,4 +13,5 @@ server {
     }
 
     # Additional configuration if needed
+    client_max_body_size 50M;
 }

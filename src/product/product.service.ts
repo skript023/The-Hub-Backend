@@ -1,21 +1,37 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schema/product.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import response from 'src/interfaces/response.dto';
 import * as fs from 'fs';
-import path from 'path';
 
 import * as mongoose from 'mongoose';
-import { ExternalHyperlink, ImageRun, Paragraph, patchDocument, PatchType, TextRun } from "docx";
+import { ImageRun, Paragraph, patchDocument, PatchType, TextRun } from "docx";
 import { Response } from 'express';
 import { date } from 'src/util/date/date_format';
+import { ClientGrpc } from '@nestjs/microservices';
+import MsaProductService, { MsaCreateAttributeRequest, MsaCreateClassProductRequest, MsaProductCatalogRequest, MsaValueAttributeRequest } from 'src/telkom/wibs/product/interface/telkom.product.service';
+import { Observable } from 'rxjs';
+import MsaOrderService, { MsaOrderRequest } from 'src/telkom/wibs/order/interface/telkom.order.service';
 
 @Injectable()
-export class ProductService {
-    constructor(@InjectModel(Product.name) private productModel: mongoose.Model<Product>, private response: response<Product>)
-    { }
+export class ProductService implements OnModuleInit {
+    constructor(
+        @InjectModel(Product.name) private productModel: mongoose.Model<Product>, 
+        @Inject('MSA_PRODUCT') private clientProduct: ClientGrpc,
+        @Inject('MSA_ORDER') private clientOrder: ClientGrpc,
+        private response: response<Product>
+        )
+    {}
+
+    private productService: MsaProductService;
+    private orderService: MsaOrderService;
+  
+    onModuleInit() {
+        this.productService = this.clientProduct.getService<MsaProductService>('MsaProduct');
+        this.orderService = this.clientOrder.getService<MsaOrderService>('MsaOrder');
+    }
 
     async create(product: CreateProductDto, files: Array<Express.Multer.File>) 
     {
@@ -324,5 +340,42 @@ export class ProductService {
 
             return res.sendFile(filename, { root: './template' });
         }
+    }
+
+    getProductUnderCatalog(catalog_name: string, page_size: string, page_num: string)
+    {
+        const data: MsaProductCatalogRequest = {
+            catalog_name,
+            page_size,
+            page_num
+        };
+        
+        return this.productService.GetProductUnderCatalog(data);
+    }
+    
+    createAttribute(data: MsaCreateAttributeRequest)
+    {
+        return this.productService.CreateAttribute(data);
+    }
+
+    addValueAttribute(data: MsaValueAttributeRequest)
+    {
+        return this.productService.AddValueAttribute(data)
+    }
+
+    createClassProduct(data: MsaCreateClassProductRequest)
+    {
+        return this.productService.CreateClassProduct(data);
+    }
+
+    getMasterDataOrder(orderNum: string, pageSize?: string, pageNum?: string)
+    {
+        const data: MsaOrderRequest = {
+            orderNum,
+            pageSize,
+            pageNum
+        };
+
+        return this.orderService.GetMasterDataOrder(data);
     }
 }

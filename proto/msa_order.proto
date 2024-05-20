@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package msa_order;
+
+message MsaOrderRequest
+{
+    string orderNum = 1;
+    string pageSize = 2;
+    string pageNum = 3;
+}
+
+message MsaOrderData
+{
+    int32 rnum = 1;
+    string rowidorder = 2;
+    string ordernumber = 3;
+    string createddate = 4;
+    string canum = 5;
+    string lastname = 6;
+    string salesrep = 7;
+    string statusorder = 8;
+    string intstatusorder = 9;
+    int32 revision = 10;
+}
+
+message MsaOrderReplies
+{
+    string message = 1;
+    bool success = 2;
+    string datetime = 3;
+    repeated MsaOrderData data = 4;
+}
+
+service MsaOrder 
+{
+    rpc GetMasterDataOrder(MsaOrderRequest) returns (MsaOrderReplies) {}
+    rpc GetMasterDataOrderStream(stream MsaOrderRequest) returns (stream MsaOrderReplies) {}
+}

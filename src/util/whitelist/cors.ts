@@ -5,7 +5,7 @@ export const whitelist = [
 	'https://www.rena.my.id',
 	'https://dashboard.rena.my.id',
 	'http://localhost:5173',
-]
+];
 
 export const options: CorsOptions = {
 	credentials: true,
@@ -18,11 +18,17 @@ export const options: CorsOptions = {
 
 			callback(null, true);
 		}
+		// else if (origin === undefined)
+		// {
+		// 	Logger.warn(`Allow request from ${origin}`, 'Whitelist');
+
+		// 	callback(null, true);
+		// }
 		else 
 		{
 			Logger.warn(`Blocked request from ${origin}`);    
 
-			callback(new Error('Not allowed by CORS'));
+			callback(new Error('Not allowed by CORS'), false);
 		}
 	},
 }

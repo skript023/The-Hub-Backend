@@ -49,7 +49,7 @@ export class AppModule implements NestModule {
     async onModuleInit() {
         const isConnectedToCloud = process.env.DB_CLOUD === 'true';
         const connectionType = isConnectedToCloud ? 'Cloud' : 'Local';
-        Logger.log(`Connected to ${connectionType} MongoDB`);
+        Logger.log(`Connected to ${connectionType} MongoDB`, `${connectionType} Connection`);
     }
     configure(consumer: MiddlewareConsumer) {
         consumer.apply(AuthMiddleware).forRoutes(

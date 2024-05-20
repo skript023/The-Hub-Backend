@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package msa_product;
+
+message MDTii8HfmaBGchFbLR63gLGbWGSAHBXwNt
+{
+    string catalog_name = 1;
+    string page_size = 2;
+    string page_num = 3;
+}
+
+message MsaCreateAttributeRequest
+{
+    string attribute_name = 1;
+    string data_type_cd = 2;
+    string domain_type_cd = 3;
+    int32 min_val = 4;
+    int32 max_val = 5;
+    string uom = 6;
+}
+
+message MsaValueAttributeRequest
+{
+    string value_attribute = 1;
+    int32 seq_num = 2;
+    string attrbute_name = 3;
+}
+
+message MsaCreateClassProductRequest
+{
+    string className = 1;
+}
+
+message MsaProductUnderCatalog
+{
+    int32 rnum = 1;
+    string categoryName = 2;
+    string categoryNCXId = 3;
+    string prodName = 4;
+    int32 seqNum = 5;
+}
+
+message MsaProductPage
+{
+    int32 pageSize = 1;
+    int32 totalData = 2;
+    int32 totalPage = 3;
+    int32 currentPage = 4;
+}
+
+message MsaProductUnderCatalogReplies
+{
+    string message = 1;
+    bool success = 2;
+    string datetime = 3;
+    repeated MsaProductUnderCatalog data = 5;
+}
+
+message MsaProductResponse
+{
+    string message = 1;
+    bool success = 2;
+    string datetime = 3;
+}
+
+service MsaProduct 
+{
+    rpc GetProductUnderCatalog(MDTii8HfmaBGchFbLR63gLGbWGSAHBXwNt) returns (MsaProductUnderCatalogReplies) {}
+    rpc GetProductUnderCatalogStream(stream MDTii8HfmaBGchFbLR63gLGbWGSAHBXwNt) returns (stream MsaProductUnderCatalogReplies) {}
+    rpc CreateAttribute(MsaCreateAttributeRequest) returns (MsaProductResponse) {}
+    rpc CreateAttributeStream(stream MsaCreateAttributeRequest) returns (stream MsaProductResponse) {}
+    rpc AddValueAttribute(MsaValueAttributeRequest) returns (MsaProductResponse) {}
+    rpc AddValueAttributeStream(stream MsaValueAttributeRequest) returns (stream MsaProductResponse) {}
+    rpc CreateClassProduct(MsaCreateClassProductRequest) returns (MsaProductResponse) {}
+    rpc CreateClassProductStream(stream MsaCreateClassProductRequest) returns (stream MsaProductResponse) {}
+}

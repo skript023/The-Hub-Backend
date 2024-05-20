@@ -7,10 +7,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
+import { ClientsModule } from '@nestjs/microservices';
+import { MSA_PRODUCT_SERVICE } from 'src/telkom/wibs/product/telkom.product';
+import { MSA_ORDER_SERVICE } from 'src/telkom/wibs/order/telkom.order';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
+        ClientsModule.register([
+            MSA_PRODUCT_SERVICE,
+            MSA_ORDER_SERVICE
+        ]),
         MulterModule.register({
             storage: diskStorage({
                 destination: (req, file, cb) => {
@@ -42,5 +49,6 @@ import * as fs from 'fs';
     ],
     controllers: [ProductController],
     providers: [ProductService, response<Product>],
+    exports: [ProductService]
 })
 export class ProductModule {}
