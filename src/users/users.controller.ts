@@ -26,6 +26,11 @@ import { Auth } from '../auth/decorator/auth.decorator';
 export class UsersController {
     constructor(private userService: UsersService) {}
 
+    @Get('profile/detail')
+    getProfile(@Request() req) {
+        return req.user;
+    }
+    
     @Post()
     @UseInterceptors(FileInterceptor('image'))
     create(
@@ -42,16 +47,6 @@ export class UsersController {
         file: Express.Multer.File,
     ) {
         return this.userService.create(createUserDto, file);
-    }
-
-    @Get('avatar/:name')
-    image(@Param('name') name: string, @Res() res: Response) {
-        return this.userService.getImage(name, res);
-    }
-
-    @Delete('avatar/delete/:name')
-    delete_image(@Param('name') name) {
-        fs.unlinkSync(`${__dirname}/assets/avatar/${name}`);
     }
 
     @Auth({
@@ -104,8 +99,13 @@ export class UsersController {
         return this.userService.remove(id);
     }
 
-    @Get('profile/detail')
-    getProfile(@Request() req) {
-        return req.user;
+    @Get('avatar/:name')
+    image(@Param('name') name: string, @Res() res: Response) {
+        return this.userService.getImage(name, res);
+    }
+
+    @Delete('avatar/delete/:name')
+    delete_image(@Param('name') name) {
+        fs.unlinkSync(`${__dirname}/assets/avatar/${name}`);
     }
 }

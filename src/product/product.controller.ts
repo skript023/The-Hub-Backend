@@ -29,6 +29,44 @@ import { MsaCreateAttributeRequest, MsaCreateClassProductRequest, MsaValueAttrib
 export class ProductController {
     constructor(private readonly productService: ProductService) {}
 
+    @Get('siebel/getProductUnderCatalog')
+    getProductUnderCatalog(
+        @Query('catalog_name') catalogName: string, 
+        @Query('page_size') page_size: string, 
+        @Query('page_num') page_num: string, 
+    )
+    {
+        return this.productService.getProductUnderCatalog(catalogName, page_size, page_num);
+    }
+
+    @Post('siebel/createAttribute')
+    createAttribute(@Body() data: MsaCreateAttributeRequest)
+    {
+        return this.productService.createAttribute(data);
+    }
+
+    @Post('siebel/addValueAttribute')
+    addValueAttribute(@Body() data: MsaValueAttributeRequest)
+    {
+        return this.productService.addValueAttribute(data);
+    }
+
+    @Post('siebel/createClassProduct')
+    createClassProduct(@Body() data: MsaCreateClassProductRequest)
+    {
+        return this.productService.createClassProduct(data);
+    }
+
+    @Get('siebel/GetMasterDataOrder')
+    getMasterDataOrder(
+        @Query('orderNum') orderNum: string,
+        @Query('pageSize') pageSize: string,
+        @Query('pageNum') pageNum: string,
+    )
+    {
+        return this.productService.getMasterDataOrder(orderNum, pageSize, pageNum);
+    }
+
     @Auth({
         role: ['admin', 'staff'],
         access: 'create',
@@ -101,43 +139,5 @@ export class ProductController {
     @Get('doc/:id')
     generateDocument(@Param('id') id: string, @Res() res: Response) {
         return this.productService.generateD2PDocument(id, res);
-    }
-
-    @Get('siebel/getProductUnderCatalog')
-    getProductUnderCatalog(
-        @Query('catalog_name') catalogName: string, 
-        @Query('page_size') page_size: string, 
-        @Query('page_num') page_num: string, 
-    )
-    {
-        return this.productService.getProductUnderCatalog(catalogName, page_size, page_num);
-    }
-
-    @Post('siebel/createAttribute')
-    createAttribute(@Body() data: MsaCreateAttributeRequest)
-    {
-        return this.productService.createAttribute(data);
-    }
-
-    @Post('siebel/addValueAttribute')
-    addValueAttribute(@Body() data: MsaValueAttributeRequest)
-    {
-        return this.productService.addValueAttribute(data);
-    }
-
-    @Post('siebel/createClassProduct')
-    createClassProduct(@Body() data: MsaCreateClassProductRequest)
-    {
-        return this.productService.createClassProduct(data);
-    }
-
-    @Get('siebel/GetMasterDataOrder')
-    getMasterDataOrder(
-        @Query('orderNum') orderNum: string,
-        @Query('pageSize') pageSize: string,
-        @Query('pageNum') pageNum: string,
-    )
-    {
-        return this.productService.getMasterDataOrder(orderNum, pageSize, pageNum);
     }
 }

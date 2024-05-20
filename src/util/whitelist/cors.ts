@@ -28,7 +28,7 @@ export const options: CorsOptions = {
 		{
 			Logger.warn(`Blocked request from ${origin}`);    
 
-			callback(new Error('Not allowed by CORS'), false);
+			callback(new Error('Not allowed by CORS'));
 		}
 	},
 }

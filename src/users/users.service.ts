@@ -163,14 +163,12 @@ export class UsersService {
 
     async getImage(name: string, res: Response)
     {
-        if (fs.existsSync(`./storage/avatar/${name}`))
+        if (!fs.existsSync(`./storage/avatar/${name}`))
         {
-            res.sendFile(name, { root: `./storage/avatar` });
+            throw new NotFoundException('Image not found');
         }
-        else
-        {
-            res.redirect(`https://cdn.glitch.global/8b426895-1f9e-43d5-af3a-57e5ba338096/${name}`);
-        }
+        
+        res.sendFile(name, { root: `./storage/avatar` });
     }
 
     async does_user_exist(userCreation: CreateUserDto): Promise<boolean>

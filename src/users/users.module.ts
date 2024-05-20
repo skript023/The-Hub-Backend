@@ -1,8 +1,5 @@
 import {
-    MiddlewareConsumer,
     Module,
-    NestModule,
-    RequestMethod,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -13,6 +10,7 @@ import { diskStorage } from 'multer';
 import response from '../interfaces/response.dto';
 import { existsSync, mkdirSync } from 'fs';
 import { RoleSchema } from '../role/schema/role.schema';
+import hash from 'src/util/hash/md5';
 
 @Module({
     imports: [
@@ -30,7 +28,7 @@ import { RoleSchema } from '../role/schema/role.schema';
                 filename: (req, file, cb) => {
                     const name = file.originalname.split('.')[0];
                     const extension = file.originalname.split('.')[1];
-                    const filename = `${name}_${Date.now()}.${extension}`;
+                    const filename = `${hash.md5(name)}.${extension}`;
 
                     cb(null, filename);
                 },
