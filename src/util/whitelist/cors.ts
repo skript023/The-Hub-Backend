@@ -18,12 +18,12 @@ export const options: CorsOptions = {
 
 			callback(null, true);
 		}
-		// else if (origin === undefined)
-		// {
-		// 	Logger.warn(`Allow request from ${origin}`, 'Whitelist');
+		else if (origin === undefined)
+		{
+			Logger.warn(`Allow request from ${origin}`, 'Whitelist');
 
-		// 	callback(null, true);
-		// }
+			callback(null, true);
+		}
 		else 
 		{
 			Logger.warn(`Blocked request from ${origin}`);    
