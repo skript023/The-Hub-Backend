@@ -6,7 +6,6 @@ import {
     Patch,
     Param,
     Delete,
-    Request,
     UseInterceptors,
     ParseFilePipe,
     MaxFileSizeValidator,
@@ -21,14 +20,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import * as fs from 'fs';
 import { Auth } from '../auth/decorator/auth.decorator';
+import { User } from 'src/auth/decorator/user.decorator';
+import Profile from 'src/auth/interface/user.profile';
 
 @Controller('user')
 export class UsersController {
     constructor(private userService: UsersService) {}
 
     @Get('profile/detail')
-    getProfile(@Request() req) {
-        return req.user;
+    getProfile(@User() user: Profile) {
+        return user;
     }
     
     @Post()

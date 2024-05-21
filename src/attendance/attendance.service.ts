@@ -14,6 +14,7 @@ import { sheets, sheets_v4, auth } from '@googleapis/sheets';
 import { Cron, Interval } from '@nestjs/schedule';
 import { Activity } from 'src/activity/schema/activity.schema';
 import { ConfigService } from '@nestjs/config';
+import Profile from 'src/auth/interface/user.profile';
 
 @Injectable()
 export class AttendanceService 
@@ -78,9 +79,9 @@ export class AttendanceService
 		return this.response.json();
 	}
 
-	async findAll()
+	async findAll(user: Profile)
 	{
-		const attendance = await this.attendanceModel.find(null);
+		const attendance = await this.attendanceModel.find();
 
         if (attendance.length <= 0)
         {
@@ -187,7 +188,6 @@ export class AttendanceService
 	})
 	async absen()
 	{
-		Logger.log('Absen automatically sent');
 		const absen = new CreateAttendanceDto();
 		const hour   = date.getCurrentHour();
 		const random = date.randomizeMinute();
@@ -198,7 +198,17 @@ export class AttendanceService
 		absen.jenis = 'Hadir';
 		absen.type = 'Hari Kerja';
 
-		return this.create(absen);
+		const res = await this.create(absen);
+		if (res.success)
+		{
+			Logger.log('Attendance successfully sent', 'Auto Attendance');
+		}
+		else
+		{
+			Logger.warn('Failed send attendance', 'Auto Attendance')
+		}
+
+		return res;
 	}
 
 	@Cron('0 55 16 * * 5',  {
@@ -218,7 +228,7 @@ export class AttendanceService
 			createdAt: { $gte: monday, $lte: friday } 
 		});
 
-		report.date = new Date().toString();
+		report.date = new Date().toLocaleDateString();
 		const description = activities.map(activity => activity.name).join(`\n`)
 
 		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
@@ -230,9 +240,11 @@ export class AttendanceService
 
 		if (weekly.success)
 		{
-			Logger.log(`Weekly report automatically sent, task is ${activities}`);
-
-			return weekly.json();
+			Logger.log(`Weekly report successfully sent`);
+		}
+		else
+		{
+			Logger.warn(`Failed send weekly report`);
 		}
 
 		return weekly.json();

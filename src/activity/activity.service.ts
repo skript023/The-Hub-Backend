@@ -9,6 +9,7 @@ import { Activity } from './schema/activity.schema';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import response from '../interfaces/response.dto';
+import Profile from 'src/auth/interface/user.profile';
 
 @Injectable()
 export class ActivityService {
@@ -34,11 +35,11 @@ export class ActivityService {
         return this.response.json();
     }
 
-    async findAll() 
+    async findAll(user: Profile) 
     {
         const activities = await this.activityModel
-            .find(null, { createdAt: 0, updatedAt: 0, __v: 0 })
-            .populate('user', ['fullname', 'username']);
+            .find({ user_id: user._id }, { createdAt: 0, updatedAt: 0, __v: 0 })
+            .populate('user', ['fullname', 'username']).sort({ createdAt: -1 });
 
         this.response.data = activities;
         this.response.message = 'Success retrieve tasks';

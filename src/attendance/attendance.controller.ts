@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/
 import { AttendanceService } from './attendance.service';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
+import { User } from 'src/auth/decorator/user.decorator';
+import Profile from 'src/auth/interface/user.profile';
 
 @Controller('attendance')
 export class AttendanceController {
@@ -13,8 +15,8 @@ export class AttendanceController {
 	}
 
 	@Get()
-	findAll() {
-		return this.attendanceService.findAll();
+	findAll(@User() user: Profile) {
+		return this.attendanceService.findAll(user);
 	}
 
 	@Get(':id')

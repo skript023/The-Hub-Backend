@@ -26,9 +26,9 @@ import hash from 'src/util/hash/md5';
                     cb(null, path);
                 },
                 filename: (req, file, cb) => {
-                    const name = file.originalname.split('.')[0];
+                    const user = req.body as User;
                     const extension = file.originalname.split('.')[1];
-                    const filename = `${hash.md5(name)}.${extension}`;
+                    const filename = `${hash.md5(`${user.username}_${new Date()}`)}.${extension}`;
 
                     cb(null, filename);
                 },

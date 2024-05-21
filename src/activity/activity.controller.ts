@@ -11,6 +11,8 @@ import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Auth } from '../auth/decorator/auth.decorator';
+import { User } from 'src/auth/decorator/user.decorator';
+import Profile from 'src/auth/interface/user.profile';
 
 @Controller('activity')
 export class ActivityController {
@@ -44,8 +46,8 @@ export class ActivityController {
         access: 'read',
     })
     @Get()
-    findAll() {
-        return this.activityService.findAll();
+    findAll(@User() user: Profile) {
+        return this.activityService.findAll(user);
     }
 
     @Auth({
