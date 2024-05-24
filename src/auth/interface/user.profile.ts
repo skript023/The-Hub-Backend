@@ -14,5 +14,5 @@ export default interface Profile
     expired: string;
     recent_login: string;
     remember_token: string;
-    role: Role
+    role: Role;
 }

@@ -30,12 +30,7 @@ export class AuthController {
             signInDto.password,
         );
 
-        res.cookie('token', token, {
-            httpOnly: cookie_prod.httpOnly,
-            secure: cookie_prod.secure,
-            sameSite: cookie_prod.sameSite,
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        }).send({ message: 'Login success' });
+        res.cookie('token', token, process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send({ message: 'Login success' });
     }
 
     @Get('profile')
@@ -45,11 +40,7 @@ export class AuthController {
 
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('token', {
-            httpOnly: cookie_prod.httpOnly,
-            secure: cookie_prod.secure,
-            sameSite: cookie_prod.sameSite,
-        }).send({ message: 'Logout success' });
+        res.clearCookie('token', process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send({ message: 'Logout success' });
     }
 
     @Get('google')

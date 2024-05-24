@@ -25,6 +25,8 @@ export class Role {
 
     @Prop({ enum: AccessLevel, required: true })
     level: AccessLevel;
+
+
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);
@@ -33,4 +35,11 @@ RoleSchema.virtual('user', {
     ref: 'User',
     localField: '_id',
     foreignField: 'role_id',
+});
+
+RoleSchema.virtual('route', {
+    ref: 'Route',
+    localField: '_id',
+    foreignField: 'role_id',
+    justOne: false
 });

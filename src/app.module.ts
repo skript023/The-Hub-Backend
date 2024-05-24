@@ -21,6 +21,7 @@ import { AccountingModule } from './accounting/accounting.module';
 import connection from './util/database/database';
 import { Logger } from '@nestjs/common';
 import { AttendanceModule } from './attendance/attendance.module';
+import { RouteModule } from './route/route.module';
 
 @Module({
     imports: [
@@ -41,6 +42,7 @@ import { AttendanceModule } from './attendance/attendance.module';
         ProductModule,
         AccountingModule,
         AttendanceModule,
+        RouteModule,
     ],
     controllers: [AppController],
     providers: [AppService],
@@ -81,6 +83,12 @@ export class AppModule implements NestModule {
             { path: 'product/:id', method: RequestMethod.PATCH },
             { path: 'product/:id', method: RequestMethod.DELETE },
             { path: 'product/doc/:id', method: RequestMethod.GET },
+            { path: 'product/siebel/getProductUnderCatalog', method: RequestMethod.GET },
+            { path: 'product/siebel/createAttribute', method: RequestMethod.POST },
+            { path: 'product/siebel/addValueAttribute', method: RequestMethod.POST },
+            { path: 'product/siebel/createClassProduct', method: RequestMethod.POST },
+            { path: 'product/siebel/GetMasterDataOrder', method: RequestMethod.GET },
+            { path: 'product/siebel/getAttributeByQuoteLineItem', method: RequestMethod.GET },
 
             { path: 'accounting', method: RequestMethod.GET },
             { path: 'accounting', method: RequestMethod.POST },
@@ -93,6 +101,12 @@ export class AppModule implements NestModule {
             { path: 'attendance/:id', method: RequestMethod.GET },
             { path: 'attendance/:id', method: RequestMethod.PATCH },
             { path: 'attendance/:id', method: RequestMethod.DELETE },
+
+            { path: 'route', method: RequestMethod.GET },
+            { path: 'route', method: RequestMethod.POST },
+            { path: 'route/:id', method: RequestMethod.GET },
+            { path: 'route/:id', method: RequestMethod.PATCH },
+            { path: 'route/:id', method: RequestMethod.DELETE },
         );
 
         consumer.apply(BasicMiddleware).forRoutes({

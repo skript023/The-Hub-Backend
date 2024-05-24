@@ -70,10 +70,11 @@ UserSchema.virtual('activity', {
     foreignField: 'user_id',
 });
 
-UserSchema.virtual('asset', {
-    ref: 'Asset',
-    localField: '_id',
-    foreignField: 'user_id',
+UserSchema.virtual('route', {
+    ref: 'Route',
+    localField: 'role_id',
+    foreignField: 'role_id',
+    justOne: false
 });
 
 UserSchema.virtual('order', {
