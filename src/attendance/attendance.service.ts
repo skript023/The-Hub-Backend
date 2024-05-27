@@ -81,7 +81,7 @@ export class AttendanceService
 
 	async findAll(user: Profile)
 	{
-		const attendance = await this.attendanceModel.find();
+		const attendance = await this.attendanceModel.find().sort({ _id: -1 });
 
         if (attendance.length <= 0)
         {

@@ -52,12 +52,7 @@ export class AuthController {
     async googleAuthRedirect(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const { token } = await this.authService.googleLogin(req);
 
-        res.cookie('token', token, {
-            httpOnly: cookie_prod.httpOnly,
-            secure: cookie_prod.secure,
-            sameSite: cookie_prod.sameSite,
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        }).send(`
+        res.cookie('token', token, process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send(`
         <!DOCTYPE html>
         <html lang="en">
         <head>
