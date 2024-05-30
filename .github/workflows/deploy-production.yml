@@ -20,6 +20,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y sshpass
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && 
+          sudo dpkg -i cloudflared.deb && 
+          sudo cloudflared service install eyJhIjoiYzkyOTdhOThlNTlmMjJmYTRiZTRkZWI2ODRhMmQzNDgiLCJ0IjoiNzczZDRjMGMtZTQzZC00YTk5LWIyYjUtYWY2NjM1MDhkNGQ3IiwicyI6IlpHUTNabVE0TkRrdE1tWmhOeTAwTkdZNUxXRmxOVGt0WmprNVkyVXhaRFkwTXpndyJ9
+
+      - name: Add cloudflare SSH config
+        run: |
+          if [ ! -d ~/.ssh ]; then mkdir ~/.ssh; fi
+          echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
 
       - name: Create directory
         env:
