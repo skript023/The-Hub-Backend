@@ -41,8 +41,10 @@ jobs:
           fi"
 
       - name: Create JSON file
+        env:
+          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -f '/media/telkom/data11/deployment/rena/rena-backend/google.json' ]; then 
             echo '{
                 "'"type"'": "'"service_account"'",
