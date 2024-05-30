@@ -41,20 +41,15 @@ jobs:
             echo Directory '/media/telkom/data11/deployment/rena already exists.'
           fi"
 
-      - name: Set safe directory
-        env:
-          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /media/telkom/data11/deployment/rena/rena-backend"
-      
       - name: Deploy from repository
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
         run: |
           sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena/rena-backend' ]; then 
-            cd /var/www/rena.telkom.co.id && git clone https://github.com/${{ github.repository }} backend; 
+            cd /var/www/rena.telkom.co.id && sudo -S git clone https://github.com/${{ github.repository }} backend; 
           else 
-            cd /media/telkom/data11/deployment/rena/rena-backend && git pull origin main; 
+            cd /media/telkom/data11/deployment/rena/rena-backend && sudo -S git pull origin main; 
           fi"
 
       - name: Build and start Docker containers
