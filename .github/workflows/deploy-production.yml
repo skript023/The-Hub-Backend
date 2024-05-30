@@ -41,6 +41,29 @@ jobs:
             echo Directory '/media/telkom/data11/deployment/rena already exists.'
           fi"
 
+      - name: Create JSON file
+        env:
+          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
+        run: |
+          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -f '/media/telkom/data11/deployment/rena/rena-backend/google.json' ]; then 
+            echo '{
+                "'"type"'": "'"service_account"'",
+                "'"project_id"'": "'"${{ secrets.PROJECT_ID }}"'",
+                "'"private_key_id"'": "'"${{ secrets.PRIVATE_KEY_ID }}"'",
+                "'"private_key"'": "'"${{ secrets.PRIVATE_KEY }}"'",
+                "'"client_email"'": "'"${{ secrets.CLIENT_EMAIL }}"'",
+                "'"client_id"'": "'"${{ secrets.CLIENT_ID }}"'",
+                "'"auth_uri"'": "'"${{ secrets.AUTH_URI }}"'",
+                "'"token_uri"'": "'"${{ secrets.TOKEN_URI }}"'",
+                "'"auth_provider_x509_cert_url"'": "'"${{ secrets.AUTH_PROVIDER }}"'",
+                "'"client_x509_cert_url"'": "'"${{ secrets.CLIENT_CERT_URL }}"'",
+                "'"universe_domain"'": "'"googleapis.com"'"
+            }' > /media/telkom/data11/deployment/rena/rena-backend/google.json; 
+          else 
+            echo "google.json already exists remotely. Skipping creation."; 
+          fi"
+
       - name: Set safe directory
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
@@ -52,12 +75,12 @@ jobs:
         run: |
           sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena/rena-backend' ]; then 
-            cd /var/www/rena.telkom.co.id && sudo git clone https://github.com/${{ github.repository }} backend; 
+            cd /var/www/rena.telkom.co.id && git clone https://github.com/${{ github.repository }} backend; 
           else 
-            cd /media/telkom/data11/deployment/rena/rena-backend && sudo git pull origin main; 
+            cd /media/telkom/data11/deployment/rena/rena-backend && git pull origin main; 
           fi"
 
       - name: Build and start Docker containers
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: sshpass -p "$SSH_CREDENTIAL" ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && sudo docker compose up --build -d"
+        run: sshpass -p "$SSH_CREDENTIAL" ssh -F ~/.ssh/config ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && sudo -S docker compose up --build -d"
