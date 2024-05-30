@@ -46,12 +46,12 @@ jobs:
         run: |
           sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena/rena-backend' ]; then 
-            cd /var/www/rena.telkom.co.id && echo $SSH_PASSWORD | sudo -S git clone https://github.com/${{ github.repository }} backend; 
+            cd /var/www/rena.telkom.co.id && echo '$SSH_PASSWORD' | sudo -S git clone https://github.com/${{ github.repository }} backend; 
           else 
-            cd /media/telkom/data11/deployment/rena/rena-backend && echo "$SSH_PASSWORD" | sudo -S git pull origin main; 
+            cd /media/telkom/data11/deployment/rena/rena-backend && echo '$SSH_PASSWORD' | sudo -S git pull origin main; 
           fi"
 
       - name: Build and start Docker containers
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: sshpass -p "$SSH_CREDENTIAL" ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && echo $SSH_PASSWORD | sudo -S docker compose up --build -d"
+        run: sshpass -p "$SSH_CREDENTIAL" ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && echo '$SSH_PASSWORD' | sudo -S docker compose up --build -d"
