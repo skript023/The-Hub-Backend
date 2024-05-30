@@ -34,7 +34,7 @@ jobs:
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
         run: |
-          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena' ]; then 
             sudo mkdir -p /media/telkom/data11/deployment/rena 
           else 
@@ -44,13 +44,13 @@ jobs:
       - name: Set safe directory
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /media/telkom/data11/deployment/rena/rena-backend"
+        run: sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "git config --global --add safe.directory /media/telkom/data11/deployment/rena/rena-backend"
       
       - name: Deploy from repository
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
         run: |
-          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena/rena-backend' ]; then 
             cd /var/www/rena.telkom.co.id && git clone https://github.com/${{ github.repository }} backend; 
           else 
@@ -60,4 +60,4 @@ jobs:
       - name: Build and start Docker containers
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: sshpass -p "$SSH_CREDENTIAL" ssh -F ~/.ssh/config ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && sudo -S docker compose up --build -d"
+        run: sshpass -p "$SSH_CREDENTIAL" sudo -S ssh -F ~/.ssh/config ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /media/telkom/data11/deployment/rena/rena-backend && sudo -S docker compose up --build -d"
