@@ -47,7 +47,7 @@ jobs:
         run: |
           sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -f '/media/telkom/data11/deployment/rena/backend/google.json' ]; then 
-            echo '{
+            sudo echo '{
                 "'"type"'": "'"service_account"'",
                 "'"project_id"'": "'"${{ secrets.PROJECT_ID }}"'",
                 "'"private_key_id"'": "'"${{ secrets.PRIVATE_KEY_ID }}"'",
@@ -61,7 +61,7 @@ jobs:
                 "'"universe_domain"'": "'"googleapis.com"'"
             }' > /media/telkom/data11/deployment/rena/rena-backend/google.json; 
           else 
-            echo "google.json already exists remotely. Skipping creation."; 
+            sudo echo "google.json already exists remotely. Skipping creation."; 
           fi"
 
       - name: Set safe directory
