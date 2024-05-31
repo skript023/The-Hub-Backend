@@ -8,7 +8,7 @@ export const MSA_PRODUCT_SERVICE: any = {
 		url: 'localhost:50051',
 		package: 'msa_product',
 		protoPath: join(__dirname, '../../../../proto/msa_product.proto'),
-		credentials: require('@grpc/grpc-js').credentials.createSsl(),
+		// credentials: require('@grpc/grpc-js').credentials.createSsl(),
 		loader: {
 			keepCase: true,
 			longs: String,
