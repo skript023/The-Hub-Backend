@@ -69,7 +69,7 @@ jobs:
         run: |
           sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
           if [ ! -d '/media/telkom/data11/deployment/rena/rena-backend' ]; then 
-            cd /var/www/rena.telkom.co.id && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git clone https://github.com/${{ github.repository }} backend; 
+            cd /media/telkom/data11/deployment/rena && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git clone https://github.com/${{ github.repository }} rena-backend; 
           else 
             cd /media/telkom/data11/deployment/rena/rena-backend && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git pull origin main; 
           fi"
