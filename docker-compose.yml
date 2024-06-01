@@ -7,10 +7,6 @@ services:
     init: true
     ports:
       - 3000:3000
-    networks:
-      - rena
+    network_mode: "host"
     volumes:
       - ./storage:/usr/src/app/storage
-networks:
-  rena:
-    driver: bridge
