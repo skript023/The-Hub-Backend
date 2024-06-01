@@ -5,7 +5,7 @@ export const MSA_ORDER_SERVICE: any = {
 	name: 'MSA_ORDER',
 	transport: Transport.GRPC,
 	options: {
-		url: 'rena-gateway',
+		url: 'rena-gateway:50051',
 		package: 'msa_order',
 		protoPath: join(__dirname, '../../../../proto/msa_order.proto'),
 		// credentials: require('@grpc/grpc-js').credentials.createSsl(),
