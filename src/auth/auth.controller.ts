@@ -38,6 +38,11 @@ export class AuthController {
         return req.user;
     }
 
+    @Get('check')
+    async checkCookie(@Req() req: Request) {
+        return this.authService.checkAuth(req);
+    }
+
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('token', process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send({ message: 'Logout success' });

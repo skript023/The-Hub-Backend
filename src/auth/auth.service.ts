@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/schema/user.schema';
 import response from 'src/interfaces/response.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -98,7 +99,30 @@ export class AuthService {
         return {
             token: await this.jwtService.signAsync(payload, { expiresIn: '24h' }),
         };
-      }
+    }
+
+    async checkAuth(req: Request)
+    {
+        const token = (req.cookies && req.cookies.token) ?? null;
+
+        try 
+        {
+            if (!token)
+                throw new UnauthorizedException('SVC01 - You are not logged in, please login!');
+
+            await this.jwtService.verifyAsync(req.cookies.token, {
+                secret: process.env.SECRET,
+            });
+
+            return { message: 'Authorized', success: true };
+        } 
+        catch (error) 
+        {
+            throw new UnauthorizedException(
+                'SVC - Your login has been expired, please login again!',
+            );
+        }
+    }
 
     private async encrypt(text: string): Promise<string> {
         const key = process.env.ENCRPYPT_KEY as string;
