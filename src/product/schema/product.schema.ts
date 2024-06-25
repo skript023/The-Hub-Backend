@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { ProductDetail } from './product.detail';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ProductDossier } from './product.dossier';
 
 @Schema({
     timestamps: true,
@@ -38,10 +39,7 @@ export class Product {
     detail: ProductDetail[];
 
     @Prop()
-    development: ProductDetail[];
-
-    @Prop()
-    production: ProductDetail[];
+    dossier: ProductDossier;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

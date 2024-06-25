@@ -3,17 +3,17 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './schema/product.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import response from 'src/interfaces/response.dto';
+import response from '@/interfaces/response.dto';
 import * as fs from 'fs';
 
 import * as mongoose from 'mongoose';
 import { ImageRun, Paragraph, patchDocument, PatchType, TextRun } from "docx";
 import { Response } from 'express';
-import { date } from 'src/util/date/date_format';
+import { date } from '@/util/date/date_format';
 import { ClientGrpc } from '@nestjs/microservices';
-import MsaProductService, { MsaCreateAttributeRequest, MsaCreateClassProductRequest, MsaProductCatalogRequest, MsaValueAttributeRequest } from 'src/telkom/wibs/product/interface/telkom.product.service';
+import MsaProductService, { MsaCreateAttributeRequest, MsaCreateClassProductRequest, MsaProductCatalogRequest, MsaValueAttributeRequest } from '@/telkom/wibs/product/interface/telkom.product.service';
 import { Observable } from 'rxjs';
-import MsaOrderService, { MsaOrderRequest } from 'src/telkom/wibs/order/interface/telkom.order.service';
+import MsaOrderService, { MsaOrderRequest } from '@/telkom/wibs/order/interface/telkom.order.service';
 
 @Injectable()
 export class ProductService implements OnModuleInit {
@@ -342,6 +342,110 @@ export class ProductService implements OnModuleInit {
         }
     }
 
+    async generateBADocument(id: string, res: Response)
+    {
+        const product = await this.productModel
+            .findById(id, { createdAt: 0, updatedAt: 0, __v: 0 })
+            .populate('user', ['fullname', 'username']);
+
+        if (!product) throw new NotFoundException('Product data not found.');
+
+        const filename = `D2P ${product.name}.docx`;
+        if (fs.existsSync(`./template/ba-d2p-doc.docx`))
+        {
+            const result = `./template/${filename}`;
+
+            const information = product.dossier.informations.map((information) => {
+                const data = [
+                    new TextRun({
+                        text: `${information.title}`,
+                        bold: true,
+                        size: `${11}pt`,
+                        font: 'Verdana',
+                    }),
+                    new TextRun({
+                        break: 1
+                    }),
+                ];
+
+                data.push(new TextRun({
+                    text: `${information.description}`,
+                    size: `${12}pt`,
+                    font: 'Arial Narrow',
+                    break: 1
+                }),
+                new TextRun({
+                    break: 2
+                }));
+
+                information.evident?.map((capture) => {
+                    if (fs.existsSync(`./storage/uat/capture/${capture.image}`)) {
+                        data.push(new ImageRun({ data: fs.readFileSync(`./storage/uat/capture/${capture.image}`), transformation: { width: 635, height: 331 } }));
+                    }
+                });
+
+                return new Paragraph({
+                    spacing: {
+                        line: 300
+                    },
+                    
+                    children: data
+                });
+            });
+
+            const document = await patchDocument(fs.readFileSync("./template/ba-d2p-doc.docx"), {
+                patches: {
+                    product_name: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product.name,
+                            bold: true,
+                            size: `${12}pt`,
+                            font: 'Verdana'
+                        })],
+                    },
+                    date_raised: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: date.getCurrentDate(),
+                            bold: true,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })]
+                    },
+                    signed_date: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: date.getCurrentDate(),
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })]
+                    },
+                    product_small: {
+                        type: PatchType.PARAGRAPH,
+                        children: [new TextRun({
+                            text: product.name,
+                            size: `${11}pt`,
+                            font: 'Verdana'
+                        })],
+                    },
+                    informations: {
+                        type: PatchType.DOCUMENT,
+                        children: information
+                    }   
+                },
+            });
+
+            fs.writeFileSync(result, document);
+
+            product.document = 'Generated';
+
+            product.save();
+
+            return res.sendFile(filename, { root: './template' });
+        }
+    }
+
     getProductUnderCatalog(catalog_name: string, page_size: string, page_num: string)
     {
         const data: MsaProductCatalogRequest = {
@@ -360,7 +464,7 @@ export class ProductService implements OnModuleInit {
 
     addValueAttribute(data: MsaValueAttributeRequest)
     {
-        return this.productService.AddValueAttribute(data)
+        return this.productService.AddValueAttribute(data);
     }
 
     createClassProduct(data: MsaCreateClassProductRequest)
