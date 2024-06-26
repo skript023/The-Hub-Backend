@@ -199,13 +199,24 @@ export class AttendanceService
 		absen.type = 'Hari Kerja';
 
 		const res = await this.create(absen);
+
 		if (res.success)
 		{
+			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ content: `Attendance successfully sent with work duration ${absen.durasi}` })
+			});
+
+			if (response.status != 200) Logger.log('Attendance failed to sent in discord', 'Discord notify');
+
 			Logger.log('Attendance successfully sent', 'Auto Attendance');
 		}
 		else
 		{
-			Logger.warn('Failed send attendance', 'Auto Attendance')
+			Logger.warn('Failed send attendance', 'Auto Attendance');
 		}
 
 		return res;
@@ -240,6 +251,16 @@ export class AttendanceService
 
 		if (weekly.success)
 		{
+			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ content: `Weekly report successfully sent at ${date.getCurrentDate()}` })
+			});
+
+			if (response.status != 200) Logger.log('Weekly report failed to sent in discord', 'Discord notify');
+
 			Logger.log(`Weekly report successfully sent`);
 		}
 		else
