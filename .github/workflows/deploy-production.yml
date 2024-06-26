@@ -51,28 +51,28 @@ jobs:
             cd /usr/include/rena/rena-backend && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git pull origin main; 
           fi"
 
-      - name: Create JSON file
-        env:
-          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: |
-          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-          if [ ! -f '/usr/include/rena/rena-backend/google.json' ]; then 
-            echo '{
-                "'"type"'": "'"service_account"'",
-                "'"project_id"'": "'"${{ secrets.PROJECT_ID }}"'",
-                "'"private_key_id"'": "'"${{ secrets.PRIVATE_KEY_ID }}"'",
-                "'"private_key"'": "'"${{ secrets.PRIVATE_KEY }}"'",
-                "'"client_email"'": "'"${{ secrets.CLIENT_EMAIL }}"'",
-                "'"client_id"'": "'"${{ secrets.CLIENT_ID }}"'",
-                "'"auth_uri"'": "'"${{ secrets.AUTH_URI }}"'",
-                "'"token_uri"'": "'"${{ secrets.TOKEN_URI }}"'",
-                "'"auth_provider_x509_cert_url"'": "'"${{ secrets.AUTH_PROVIDER }}"'",
-                "'"client_x509_cert_url"'": "'"${{ secrets.CLIENT_CERT_URL }}"'",
-                "'"universe_domain"'": "'"googleapis.com"'"
-            }' > /usr/include/rena/rena-backend/google.json; 
-          else 
-            echo 'google.json already exists remotely. Skipping creation.'; 
-          fi"
+      # - name: Create JSON file
+      #   env:
+      #     SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
+      #   run: |
+      #     sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+      #     if [ ! -f '/usr/include/rena/rena-backend/google.json' ]; then 
+      #       echo '{
+      #           "'"type"'": "'"service_account"'",
+      #           "'"project_id"'": "'"${{ secrets.PROJECT_ID }}"'",
+      #           "'"private_key_id"'": "'"${{ secrets.PRIVATE_KEY_ID }}"'",
+      #           "'"private_key"'": "'"${{ secrets.PRIVATE_KEY }}"'",
+      #           "'"client_email"'": "'"${{ secrets.CLIENT_EMAIL }}"'",
+      #           "'"client_id"'": "'"${{ secrets.CLIENT_ID }}"'",
+      #           "'"auth_uri"'": "'"${{ secrets.AUTH_URI }}"'",
+      #           "'"token_uri"'": "'"${{ secrets.TOKEN_URI }}"'",
+      #           "'"auth_provider_x509_cert_url"'": "'"${{ secrets.AUTH_PROVIDER }}"'",
+      #           "'"client_x509_cert_url"'": "'"${{ secrets.CLIENT_CERT_URL }}"'",
+      #           "'"universe_domain"'": "'"googleapis.com"'"
+      #       }' > /usr/include/rena/rena-backend/google.json; 
+      #     else 
+      #       echo 'google.json already exists remotely. Skipping creation.'; 
+      #     fi"
 
       - name: Build and start Docker containers
         env:
