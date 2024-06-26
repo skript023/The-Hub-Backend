@@ -56,7 +56,7 @@ jobs:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
         run: |
           sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-          sudo -S if [ ! -f '/usr/include/rena/rena-backend/google.json' ]; then 
+          if [ ! -f '/usr/include/rena/rena-backend/google.json' ]; then 
             echo '{
                 "'"type"'": "'"service_account"'",
                 "'"project_id"'": "'"${{ secrets.PROJECT_ID }}"'",
