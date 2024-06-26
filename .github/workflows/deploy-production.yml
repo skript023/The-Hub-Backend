@@ -40,6 +40,17 @@ jobs:
             echo Directory '/usr/include/rena already exists.'
           fi"
 
+      - name: Deploy from repository
+        env:
+          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
+        run: |
+          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          if [ ! -d '/usr/include/rena/rena-backend' ]; then 
+            cd /usr/include/rena && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git clone https://github.com/${{ github.repository }} rena-backend; 
+          else 
+            cd /usr/include/rena/rena-backend && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git pull origin main; 
+          fi"
+
       - name: Create JSON file
         env:
           SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
@@ -61,17 +72,6 @@ jobs:
             }' > /usr/include/rena/rena-backend/google.json; 
           else 
             echo 'google.json already exists remotely. Skipping creation.'; 
-          fi"
-
-      - name: Deploy from repository
-        env:
-          SSH_CREDENTIAL: ${{ secrets.SSH_CREDENTIAL }}
-        run: |
-          sshpass -p "$SSH_CREDENTIAL" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-          if [ ! -d '/usr/include/rena/rena-backend' ]; then 
-            cd /usr/include/rena && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git clone https://github.com/${{ github.repository }} rena-backend; 
-          else 
-            cd /usr/include/rena/rena-backend && echo '${{ secrets.SSH_CREDENTIAL }}' | sudo -S git pull origin main; 
           fi"
 
       - name: Build and start Docker containers
