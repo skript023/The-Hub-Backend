@@ -205,7 +205,8 @@ export class AttendanceService
 			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bot ${process.env.TOKEN}`
 				},
 				body: JSON.stringify({ content: `Attendance successfully sent with work duration ${absen.durasi}` })
 			});
@@ -254,7 +255,8 @@ export class AttendanceService
 			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bot ${process.env.TOKEN}`
 				},
 				body: JSON.stringify({ content: `Weekly report successfully sent at ${date.getCurrentDate()}` })
 			});
