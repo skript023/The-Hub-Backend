@@ -274,4 +274,38 @@ export class AttendanceService
 
 		return weekly.json();
 	}
+	async weeklyReportCheck()
+	{
+		const report = new CreateAttendanceDto();
+
+		const monday = date.getMondayDate();
+		const friday = date.getFridayDate();
+		
+
+		const activities = await this.activityModel.find({ 
+			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			createdAt: { $gte: monday, $lte: friday } 
+		});
+
+		report.date = new Date().toLocaleDateString();
+		const description = activities.map(activity => activity.name).join(`\n`);
+
+		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
+		report.durasi = ` `;
+		report.jenis = 'Weekly Report';
+		report.type = 'Hari Kerja';
+
+		const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bot ${process.env.TOKEN}`
+			},
+			body: JSON.stringify({ 
+				content: `Your current activity is ${date.getCurrentDate()} \n ${"```" + description + "```"}` 
+			})
+		});
+
+		return response.json();
+	}
 }
