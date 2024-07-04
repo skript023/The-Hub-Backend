@@ -281,7 +281,6 @@ export class AttendanceService
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
 		
-
 		const activities = await this.activityModel.find({ 
 			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
 			createdAt: { $gte: monday, $lte: friday } 
@@ -302,7 +301,7 @@ export class AttendanceService
 				'Authorization': `Bot ${process.env.TOKEN}`
 			},
 			body: JSON.stringify({ 
-				content: `Your current activity is ${date.getCurrentDate()} \n ${"```" + description + "```"}` 
+				content: `Your activity from ${monday.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} to ${new Date().toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} \n ${"```" + description + "```"}` 
 			})
 		});
 

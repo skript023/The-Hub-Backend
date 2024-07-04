@@ -9,12 +9,12 @@ import Profile from 'src/auth/interface/user.profile';
 export class AttendanceController {
 	constructor(private readonly attendanceService: AttendanceService) {}
 
-	@Post('/weeklyReport')
+	@Post('report/weekly')
 	weeklyReport() {
 		return this.attendanceService.weeklyReport();
 	}
-	
-	@Get('/weeklyReportCheck')
+
+	@Get('report/check')
 	weeklyReportCheck() {
 		return this.attendanceService.weeklyReportCheck();
 	}
