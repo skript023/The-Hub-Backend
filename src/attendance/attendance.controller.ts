@@ -9,6 +9,11 @@ import Profile from 'src/auth/interface/user.profile';
 export class AttendanceController {
 	constructor(private readonly attendanceService: AttendanceService) {}
 
+	@Post('/weeklyReport')
+	weeklyReport() {
+		return this.attendanceService.weeklyReport();
+	}
+
 	@Post()
 	create(@Body() createAttendanceDto: CreateAttendanceDto) {
 		return this.attendanceService.create(createAttendanceDto);

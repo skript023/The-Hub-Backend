@@ -241,7 +241,7 @@ export class AttendanceService
 		});
 
 		report.date = new Date().toLocaleDateString();
-		const description = activities.map(activity => activity.name).join(`\n`)
+		const description = activities.map(activity => activity.name).join(`\n`);
 
 		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
 		report.durasi = ` `;
@@ -258,7 +258,9 @@ export class AttendanceService
 					'Content-Type': 'application/json',
 					'Authorization': `Bot ${process.env.TOKEN}`
 				},
-				body: JSON.stringify({ content: `Weekly report successfully sent at ${date.getCurrentDate()}` })
+				body: JSON.stringify({ 
+					content: `Weekly report successfully sent at ${date.getCurrentDate()} \n ${"```" + description + "```"}` 
+				})
 			});
 
 			if (response.status != 200) Logger.log('Weekly report failed to sent in discord', 'Discord notify');
