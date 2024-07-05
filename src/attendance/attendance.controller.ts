@@ -19,7 +19,7 @@ export class AttendanceController {
 		return this.attendanceService.weeklyReportCheck();
 	}
 
-	@Get('check')
+	@Get('report/attend-check')
 	attendanceCheck() {
 		return this.attendanceService.attendanceCheck();
 	}
