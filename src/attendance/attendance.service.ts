@@ -307,4 +307,31 @@ export class AttendanceService
 
 		return response.json();
 	}
+	async attendanceCheck()
+	{
+		const absen = new CreateAttendanceDto();
+		const hour   = date.getCurrentHour();
+		const random = date.randomizeMinute();
+
+		absen.date = new Date().toLocaleDateString();
+		absen.deskripsi = '';
+		absen.durasi = `${hour} - 17.${random}`;
+		absen.jenis = 'Hadir';
+		absen.type = 'Hari Kerja';
+
+		const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bot ${process.env.TOKEN}`
+			},
+			body: JSON.stringify({ content: `Attendance successfully sent with work duration ${absen.durasi}` })
+		});
+
+		if (response.status != 200) Logger.log('Attendance failed to sent in discord', 'Discord notify');
+
+		Logger.log('Attendance successfully sent', 'Auto Attendance');
+
+		return response.json();
+	}
 }

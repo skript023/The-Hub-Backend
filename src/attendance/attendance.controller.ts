@@ -19,6 +19,11 @@ export class AttendanceController {
 		return this.attendanceService.weeklyReportCheck();
 	}
 
+	@Get('check')
+	attendanceCheck() {
+		return this.attendanceService.attendanceCheck();
+	}
+
 	@Post()
 	create(@Body() createAttendanceDto: CreateAttendanceDto) {
 		return this.attendanceService.create(createAttendanceDto);
