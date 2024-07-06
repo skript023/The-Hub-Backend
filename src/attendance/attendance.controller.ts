@@ -24,6 +24,11 @@ export class AttendanceController {
 		return this.attendanceService.attendanceCheck();
 	}
 
+	@Get('report/attend')
+	attend() {
+		return this.attendanceService.absen();
+	}
+
 	@Post()
 	create(@Body() createAttendanceDto: CreateAttendanceDto) {
 		return this.attendanceService.create(createAttendanceDto);
