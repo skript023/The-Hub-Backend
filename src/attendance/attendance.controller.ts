@@ -24,7 +24,7 @@ export class AttendanceController {
 		return this.attendanceService.attendanceCheck();
 	}
 
-	@Get('report/attend')
+	@Post('attend')
 	attend() {
 		return this.attendanceService.absen();
 	}
