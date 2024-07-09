@@ -18,6 +18,8 @@ export class Attendance
     _id: string;
     @Prop({ type: mongoose.SchemaTypes.ObjectId, default: null })
     user_id: string;
+    @Prop({ type: Number })
+    sequence: number;
     @Prop({ type: String, default: null })
     range: string;
     @Prop({ type: String, default: null })

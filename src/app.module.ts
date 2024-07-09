@@ -32,7 +32,11 @@ import { RouteModule } from './route/route.module';
             load: [() => ({ google: require('../google.json') })],
         }),
         MongooseModule.forRoot(
-            process.env.DB_CLOUD === 'true' ? connection.cloud : connection.local, { dbName: process.env.DB_CLUSTER, retryWrites: true, writeConcern: { w: 'majority' } }
+            process.env.DB_CLOUD === 'true' ? connection.cloud : connection.local, { 
+                dbName: process.env.DB_CLUSTER, 
+                retryWrites: true, 
+                writeConcern: { w: 'majority' } 
+            }
         ),
         ActivityModule,
         UsersModule,

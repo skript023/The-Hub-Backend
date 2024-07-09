@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { ProductDetail } from '../schema/product.detail';
+import { ProductDossier } from '../schema/product.dossier';
 
 export class CreateProductDto {
     _id: string
@@ -14,4 +15,5 @@ export class CreateProductDto {
     @IsNotEmpty()
     status: string;
     detail: ProductDetail[];
+    dossier: ProductDossier;
 }

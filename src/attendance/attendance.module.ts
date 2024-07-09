@@ -2,14 +2,41 @@ import { Module } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { AttendanceController } from './attendance.controller';
 import response from 'src/interfaces/response.dto';
-import { MongooseModule } from '@nestjs/mongoose';
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { Attendance, AttendanceSchema } from './schema/attendance.schema';
-import { ActivitySchema } from 'src/activity/schema/activity.schema';
+import { Activity, ActivitySchema } from 'src/activity/schema/activity.schema';
+import { Connection } from 'mongoose';
+import * as AutoIncrementFactory from 'mongoose-sequence';
 
 @Module({
 	imports: [
-		MongooseModule.forFeature([{ name: 'Attendance', schema: AttendanceSchema }, { name: 'Activity', schema: ActivitySchema }]),
+		MongooseModule.forFeatureAsync([
+			{ 
+				name: Attendance.name,
+				useFactory: (connection: Connection) => {
+					const schema = AttendanceSchema;
+
+					const AutoIncrement = AutoIncrementFactory(connection as any) as any;
+
+					schema.plugin(AutoIncrement, { 
+						id: 'attedance_seq',
+						inc_field: 'sequence',
+					});
+					
+					return schema;
+				},
+				inject: [getConnectionToken()],
+			}, 
+			{ 
+				name: Activity.name, 
+				useFactory: () => {
+					const schema = ActivitySchema;
+
+					return schema;
+				},
+			},
+		]),
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,

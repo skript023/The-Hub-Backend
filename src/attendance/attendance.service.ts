@@ -1,17 +1,16 @@
 import { HttpException, Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { Attendance } from './schema/attendance.schema';
 import response from 'src/interfaces/response.dto';
 import mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { date } from 'src/util/date/date_format';
-import { SheetsAppendResponse } from './dto/google/response-append.dto';
 import { ValueInputOption } from './enum/google/value_input_option';
 import { InsertDataOption } from './enum/google/insert_data_option';
 import { sheets, sheets_v4, auth } from '@googleapis/sheets';
-import { Cron, Interval } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { Activity } from 'src/activity/schema/activity.schema';
 import { ConfigService } from '@nestjs/config';
 import Profile from 'src/auth/interface/user.profile';
@@ -37,6 +36,89 @@ export class AttendanceService
 	}
 
 	private sheets: sheets_v4.Sheets;
+	private checklist_range: any = {
+		Mei: {
+			month: "MEI",
+			range: "'CEKLIS KEHADIRAN'!C:D"
+		},
+		Juni: {
+			month: "JUNI",
+			range: "'CEKLIS KEHADIRAN'!E:F"
+		},
+		Juli: {
+			month: "JULI",
+			range: "'CEKLIS KEHADIRAN'!G:H"
+		},
+		Agustus: {
+			month: "AGUSTUS",
+			range: "'CEKLIS KEHADIRAN'!I:J"
+		},
+		September: {
+			month: "SEPTEMBER",
+			range: "'CEKLIS KEHADIRAN'!K:L"
+		},
+		Oktober: {
+			month: "OKTOBER",
+			range: "'CEKLIS KEHADIRAN'!M:N"
+		},
+		November: {
+			month: "NOVEMBER",
+			range: "'CEKLIS KEHADIRAN'!O:P"
+		},
+		Desember: {
+			month: "DESEMBER",
+			range: "'CEKLIS KEHADIRAN'!Q:R"
+		},
+	};
+	private getChecklist()
+	{
+		
+	}
+
+	async checklistAttendance()
+	{
+		const data: sheets_v4.Schema$ValueRange = {
+			range: this.checklist_range[date.getCurrentMonth()].range,
+			majorDimension: "ROWS",
+			values: [
+				[
+					date.getCurrentDateIndex(),
+					'TRUE'
+				]
+			]
+		}
+		
+		const response = await this.sheets.spreadsheets.values.batchUpdate({
+			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			requestBody: {
+				data: [
+					data
+				],
+				includeValuesInResponse: true,
+				valueInputOption: 'USER_ENTERED'
+			}
+		});
+
+		// const response = await this.sheets.spreadsheets.values.append({
+		// 	spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+		// 	range: this.checklist_range[date.getCurrentMonth()].range, // Specify the range
+		// 	valueInputOption: ValueInputOption.USER_ENTERED,
+		// 	includeValuesInResponse: true,
+		// 	insertDataOption: InsertDataOption.OVERWRITE,
+		// 	requestBody: data,
+		// });
+
+		if (response.status != 200)
+		{
+			throw new HttpException(`${response.data}`, response.status);
+		}
+		console.log(this.checklist_range[date.getCurrentMonth()].range)
+		console.log(response.data)
+		this.response.success = true;
+		this.response.message = `Success checked attendance at ${date.getCurrentDate()}`;
+
+		return this.response.json();
+	}
 
 	async create(createAttendanceDto: CreateAttendanceDto) 
 	{
@@ -82,7 +164,7 @@ export class AttendanceService
 	async findAll(user: Profile)
 	{
 		const attendance = await this.attendanceModel.find().sort({ _id: -1 });
-
+		
         if (attendance.length <= 0)
         {
             this.response.message = `0 attendance found.`;

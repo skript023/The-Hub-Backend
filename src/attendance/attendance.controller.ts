@@ -29,6 +29,11 @@ export class AttendanceController {
 		return this.attendanceService.absen();
 	}
 
+	@Post('checklist')
+	checklistAttendance() {
+		return this.attendanceService.checklistAttendance();
+	}
+
 	@Post()
 	create(@Body() createAttendanceDto: CreateAttendanceDto) {
 		return this.attendanceService.create(createAttendanceDto);

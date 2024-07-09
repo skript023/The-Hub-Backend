@@ -25,6 +25,14 @@ class date_format
         return `${day} ${this.months.english[monthIndex]} ${year}`;
     }
 
+    getCurrentDateIndex(): number
+    {
+        const currentDate = new Date();
+        const dateIndex = currentDate.getDate();
+
+        return dateIndex;
+    }
+
     getCurrentMonth(): string
     {
         const currentDate = new Date();
