@@ -5,7 +5,7 @@ export const cookie_prod: CookieOptions = {
     secure: true,
     sameSite: 'none' as boolean | 'lax' | 'strict' | 'none' | undefined,
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    // domain: '.rena.my.id'
+    domain: '.rena.my.id'
 }
 
 export const cookie_dev: CookieOptions = {
