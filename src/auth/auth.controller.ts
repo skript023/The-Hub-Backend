@@ -23,14 +23,19 @@ export class AuthController {
     @Post('login')
     async signIn(
         @Body() signInDto: signInDto,
-        @Res() res: Response,
+        @Res({ passthrough: true }) res: Response,
     ): Promise<any> {
         const { token } = await this.authService.signIn(
             signInDto.identity,
             signInDto.password,
         );
 
-        res.cookie('token', token, process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send({ message: 'Login success' });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }).send({ message: 'Login success' });
     }
 
     @Get('profile')
@@ -45,7 +50,12 @@ export class AuthController {
 
     @Get('logout')
     async logout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('token', process.env.SERVER_ENVIRONMENT === 'development' ? cookie_dev : cookie_prod).send({ message: 'Logout success' });
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }).send({ message: 'Logout success' });
     }
 
     @Get('google')
