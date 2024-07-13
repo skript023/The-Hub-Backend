@@ -9,8 +9,6 @@ export class CreateRouteDto
     name: string;
     @IsNotEmpty()
     type: string;
-    @IsNotEmpty()
     frontend: string;
-    @IsNotEmpty()
     backend: string;
 }

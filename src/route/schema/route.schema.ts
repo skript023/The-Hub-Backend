@@ -24,10 +24,10 @@ export class Route {
     @Prop({ type: String, required: true })
     type: string;
 
-    @Prop({ type: String, required: true, unique: true })
+    @Prop({ type: String, default: null })
     frontend: string;
 
-    @Prop({ type: String, required: true, unique: true })
+    @Prop({ type: String, default: null })
     backend: string;
 }
 
