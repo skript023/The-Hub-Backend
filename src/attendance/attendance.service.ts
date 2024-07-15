@@ -393,10 +393,6 @@ export class AttendanceService
 
 		const response = await this.hellgate.send_message(`Attendance successfully sent with work duration ${absen.durasi}`);
 
-		if (response.status != 200) Logger.log('Attendance failed to sent in discord', 'Discord notify');
-
-		Logger.log('Attendance successfully sent', 'Auto Attendance');
-
 		return response.json();
 	}
 }
