@@ -323,14 +323,13 @@ export class AttendanceService
 		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
 		const activities = await this.activityModel.find({ 
-			start_date: { $gte: start.toLocaleDateString('id-ID', opts), $lte: end.toLocaleDateString('id-ID', opts) }, 
 			createdAt: { $gte: start, $lte: end } 
 		});
 
 		report.date = new Date().toLocaleDateString();
 		const description = activities.map(activity => activity.name).join(`\n`);
 
-		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
+		report.deskripsi = `${date.indonesiaFormat(start)} - ${date.indonesiaFormat(end)}\n${description}`;
 		report.durasi = ` `;
 		report.jenis = 'Weekly Report';
 		report.type = 'Hari Kerja';
@@ -374,7 +373,6 @@ export class AttendanceService
 		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
 		const activities = await this.activityModel.find({ 
-			start_date: { $gte: start.toLocaleDateString('id-ID', opts), $lte: end.toLocaleDateString('id-ID', opts) }, 
 			createdAt: { $gte: start, $lte: end } 
 		});
 

@@ -96,13 +96,16 @@ class date_format
 
     backdate(days: number): Date
     {
-        const currentDate = new Date(); // Current date
-        const daysToSubtract = days; // Number of days to backdate
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const lastDayOfMonth = new Date(year, month + 1, 0).getDate(); // Get the last day of the current month
 
-        const backdatedDate = new Date();
-        backdatedDate.setDate(currentDate.getDate() - daysToSubtract);
+        // Ensure the day is within the valid range of the month
+        const validDay = Math.min(days, lastDayOfMonth);
+        const targetDate = new Date(year, month, validDay);
 
-        return backdatedDate;
+        return targetDate;
     }
 }
 
