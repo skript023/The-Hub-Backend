@@ -4,19 +4,20 @@ import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 import { User } from 'src/auth/decorator/user.decorator';
 import Profile from 'src/auth/interface/user.profile';
+import { Request } from 'express';
 
 @Controller('attendance')
 export class AttendanceController {
 	constructor(private readonly attendanceService: AttendanceService) {}
 
-	@Post('report/weekly')
-	weeklyReport() {
-		return this.attendanceService.weeklyReport();
+	@Get('report/weekly')
+	weeklyReport(@Req() req: Request) {
+		return this.attendanceService.weeklyReport(req);
 	}
 
 	@Get('report/check')
-	weeklyReportCheck() {
-		return this.attendanceService.weeklyReportCheck();
+	weeklyReportCheck(@Req() req: Request) {
+		return this.attendanceService.weeklyReportCheck(req);
 	}
 
 	@Get('report/attend-check')

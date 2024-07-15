@@ -14,6 +14,7 @@ import { Cron } from '@nestjs/schedule';
 import { Activity } from 'src/activity/schema/activity.schema';
 import { ConfigService } from '@nestjs/config';
 import Profile from 'src/auth/interface/user.profile';
+import { Request } from 'express';
 
 @Injectable()
 export class AttendanceService 
@@ -309,17 +310,19 @@ export class AttendanceService
 		name: 'Weekly Report',
 		timeZone: 'Asia/Jakarta',
 	})
-	async weeklyReport()
+	async weeklyReport(req: Request)
 	{
 		const report = new CreateAttendanceDto();
 
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
 		
+		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
+		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
 
 		const activities = await this.activityModel.find({ 
-			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
-			createdAt: { $gte: monday, $lte: friday } 
+			// start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			createdAt: { $gte: start, $lte: end } 
 		});
 
 		report.date = new Date().toLocaleDateString();
@@ -356,16 +359,19 @@ export class AttendanceService
 
 		return weekly.json();
 	}
-	async weeklyReportCheck()
+	async weeklyReportCheck(req: Request)
 	{
 		const report = new CreateAttendanceDto();
 
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
+
+		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
+		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
 		
 		const activities = await this.activityModel.find({ 
-			start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
-			createdAt: { $gte: monday, $lte: friday } 
+			// start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			createdAt: { $gte: start, $lte: end } 
 		});
 
 		report.date = new Date().toLocaleDateString();

@@ -93,6 +93,17 @@ class date_format
 
         return formattedNumber;
     }
+
+    backdate(days: number): Date
+    {
+        const currentDate = new Date(); // Current date
+        const daysToSubtract = days; // Number of days to backdate
+
+        const backdatedDate = new Date();
+        backdatedDate.setDate(currentDate.getDate() - daysToSubtract);
+
+        return backdatedDate;
+    }
 }
 
 export const date = new date_format();
