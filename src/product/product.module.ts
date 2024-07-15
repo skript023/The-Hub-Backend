@@ -13,7 +13,9 @@ import { MSA_ORDER_SERVICE } from 'src/telkom/wibs/order/telkom.order';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
+        MongooseModule.forFeature([
+            { name: 'Product', schema: ProductSchema }
+        ]),
         ClientsModule.register([
             MSA_PRODUCT_SERVICE,
             MSA_ORDER_SERVICE

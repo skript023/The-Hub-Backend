@@ -41,7 +41,7 @@ export class AttendanceService
 	}
 
 	private sheets: sheets_v4.Sheets;
-	private checklist_range: any = {
+	private readonly checklist_range: any = {
 		Mei: {
 			month: "MEI",
 			range: "'CEKLIS KEHADIRAN'!C:D"
@@ -277,10 +277,13 @@ export class AttendanceService
 	{
 		const attendant = await this.dayoff.is_attendance();
 
-		this.response.message = 'Tidak ada absen, karena hari libur/cuti bersama';
-		this.response.success = true;
+		if (!attendant) 
+		{
+			this.response.message = 'Tidak ada absen, karena hari libur/cuti bersama';
+			this.response.success = false;
 
-		if (!attendant) return this.response.json();
+			return this.response.json();
+		}
 
 		const absen = new CreateAttendanceDto();
 		const hour   = date.getCurrentHour();
@@ -358,8 +361,8 @@ export class AttendanceService
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
 
-		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
-		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
+		const start = req.query.start == null ? monday : date.backdate(+req.query.start);
+		const end = req.query.end == null ? friday : date.backdate(+req.query.end);
 
 		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
