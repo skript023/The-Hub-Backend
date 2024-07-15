@@ -8,6 +8,8 @@ import { Attendance, AttendanceSchema } from './schema/attendance.schema';
 import { Activity, ActivitySchema } from 'src/activity/schema/activity.schema';
 import { Connection } from 'mongoose';
 import * as AutoIncrementFactory from 'mongoose-sequence';
+import Dayoff from './api/dayoff';
+import HellGate from '@/util/hell_gate_bot/hell_gate';
 
 @Module({
 	imports: [
@@ -43,6 +45,6 @@ import * as AutoIncrementFactory from 'mongoose-sequence';
         }),
 	],
 	controllers: [AttendanceController],
-	providers: [AttendanceService, response<Attendance>],
+	providers: [AttendanceService, response<Attendance>, Dayoff, HellGate],
 })
 export class AttendanceModule {}

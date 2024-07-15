@@ -15,6 +15,8 @@ import { Activity } from 'src/activity/schema/activity.schema';
 import { ConfigService } from '@nestjs/config';
 import Profile from 'src/auth/interface/user.profile';
 import { Request } from 'express';
+import Dayoff from './api/dayoff';
+import HellGate from '@/util/hell_gate_bot/hell_gate';
 
 @Injectable()
 export class AttendanceService 
@@ -23,6 +25,8 @@ export class AttendanceService
 		@InjectModel(Attendance.name) private attendanceModel: mongoose.Model<Attendance>,
 		@InjectModel(Activity.name) private activityModel: mongoose.Model<Activity>,
 		private response: response<Attendance>,
+		private dayoff: Dayoff,
+		private hellgate: HellGate,
 		private configService: ConfigService
 	)
 	{
@@ -271,6 +275,13 @@ export class AttendanceService
 	})
 	async absen()
 	{
+		const attendant = await this.dayoff.is_attendance();
+
+		this.response.message = 'Tidak ada absen, karena hari libur/cuti bersama';
+		this.response.success = true;
+
+		if (!attendant) return this.response.json();
+
 		const absen = new CreateAttendanceDto();
 		const hour   = date.getCurrentHour();
 		const random = date.randomizeMinute();
@@ -285,16 +296,7 @@ export class AttendanceService
 
 		if (res.success)
 		{
-			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bot ${process.env.TOKEN}`
-				},
-				body: JSON.stringify({ content: `Attendance successfully sent with work duration ${absen.durasi}` })
-			});
-
-			if (response.status != 200) Logger.log('Attendance failed to sent in discord', 'Discord notify');
+			await this.hellgate.send_message(`Attendance successfully sent with work duration ${absen.durasi}`);
 
 			Logger.log('Attendance successfully sent', 'Auto Attendance');
 		}
@@ -338,18 +340,7 @@ export class AttendanceService
 
 		if (weekly.success)
 		{
-			const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bot ${process.env.TOKEN}`
-				},
-				body: JSON.stringify({ 
-					content: `Weekly report successfully sent at ${date.getCurrentDate()} \n ${"```" + description + "```"}` 
-				})
-			});
-
-			if (response.status != 200) Logger.log('Weekly report failed to sent in discord', 'Discord notify');
+			await this.hellgate.send_message(`Weekly report successfully sent at ${date.getCurrentDate()} \n ${"```" + description + "```"}`);
 
 			Logger.log(`Weekly report successfully sent`);
 		}
@@ -384,16 +375,7 @@ export class AttendanceService
 		report.jenis = 'Weekly Report';
 		report.type = 'Hari Kerja';
 
-		const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bot ${process.env.TOKEN}`
-			},
-			body: JSON.stringify({ 
-				content: `Your activity from ${start.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} to ${end.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} \n ${"```" + description + "```"}` 
-			})
-		});
+		const response = await this.hellgate.send_message(`Your activity from ${start.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} to ${end.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} \n ${"```" + description + "```"}`);
 
 		return response.json();
 	}
@@ -409,14 +391,7 @@ export class AttendanceService
 		absen.jenis = 'Hadir';
 		absen.type = 'Hari Kerja';
 
-		const response = await fetch('https://discord.com/api/v8/channels/349824328520695818/messages', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bot ${process.env.TOKEN}`
-			},
-			body: JSON.stringify({ content: `Attendance successfully sent with work duration ${absen.durasi}` })
-		});
+		const response = await this.hellgate.send_message(`Attendance successfully sent with work duration ${absen.durasi}`);
 
 		if (response.status != 200) Logger.log('Attendance failed to sent in discord', 'Discord notify');
 
