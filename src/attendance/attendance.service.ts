@@ -320,8 +320,10 @@ export class AttendanceService
 		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
 		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
 
+		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+		
 		const activities = await this.activityModel.find({ 
-			// start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			start_date: { $gte: start.toLocaleDateString('id-ID', opts), $lte: end.toLocaleDateString('id-ID', opts) }, 
 			createdAt: { $gte: start, $lte: end } 
 		});
 
@@ -368,9 +370,11 @@ export class AttendanceService
 
 		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
 		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
+
+		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
 		const activities = await this.activityModel.find({ 
-			// start_date: { $gte: monday.toLocaleDateString(), $lte: friday.toLocaleDateString() }, 
+			start_date: { $gte: start.toLocaleDateString('id-ID', opts), $lte: end.toLocaleDateString('id-ID', opts) }, 
 			createdAt: { $gte: start, $lte: end } 
 		});
 
@@ -389,7 +393,7 @@ export class AttendanceService
 				'Authorization': `Bot ${process.env.TOKEN}`
 			},
 			body: JSON.stringify({ 
-				content: `Your activity from ${monday.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} to ${new Date().toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} \n ${"```" + description + "```"}` 
+				content: `Your activity from ${start.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} to ${end.toLocaleDateString('US-us', { year: 'numeric', month: 'long', day: 'numeric' })} \n ${"```" + description + "```"}` 
 			})
 		});
 
