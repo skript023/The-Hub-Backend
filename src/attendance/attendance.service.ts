@@ -17,6 +17,7 @@ import Profile from 'src/auth/interface/user.profile';
 import { Request } from 'express';
 import Dayoff from './api/dayoff';
 import HellGate from '@/util/hell_gate_bot/hell_gate';
+import { credentials } from '@/util/config/service_account';
 
 @Injectable()
 export class AttendanceService 
@@ -30,7 +31,7 @@ export class AttendanceService
 		private configService: ConfigService
 	)
 	{
-		const credentials = this.configService.get('google');
+		// const credentials = this.configService.get('google');
 		
 		const auths = new auth.GoogleAuth({
 			credentials,
