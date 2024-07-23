@@ -17,7 +17,6 @@ import Profile from 'src/auth/interface/user.profile';
 import { Request } from 'express';
 import Dayoff from './api/dayoff';
 import HellGate from '@/util/hell_gate_bot/hell_gate';
-import { credentials } from '@/util/config/service_account';
 
 @Injectable()
 export class AttendanceService 
@@ -31,7 +30,7 @@ export class AttendanceService
 		private configService: ConfigService
 	)
 	{
-		// const credentials = this.configService.get('google');
+		const credentials = this.configService.get('google');
 		
 		const auths = new auth.GoogleAuth({
 			credentials,
@@ -270,7 +269,7 @@ export class AttendanceService
         return this.response.json();
 	}
 
-	@Cron('0 10 07 * * 1-5',  {
+	@Cron('0 10 06 * * 1-5',  {
 		name: 'Absen',
 		timeZone: 'Asia/Jakarta',
 	})
@@ -282,6 +281,8 @@ export class AttendanceService
 		{
 			this.response.message = 'Tidak ada absen, karena hari libur/cuti bersama';
 			this.response.success = false;
+
+			await this.hellgate.send_message(`Tidak ada absen, karena hari libur/cuti bersama`);
 
 			return this.response.json();
 		}

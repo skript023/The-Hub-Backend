@@ -29,7 +29,7 @@ import { RouteModule } from './route/route.module';
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true,
-            // load: [() => ({ google: require('../google.json') })],
+            load: [() => ({ google: require('../google.json') })],
         }),
         MongooseModule.forRoot(
             process.env.DB_CLOUD === 'true' ? connection.cloud : connection.local, { 
