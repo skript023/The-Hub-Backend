@@ -201,14 +201,14 @@ export class ProductService implements OnModuleInit {
                 });
 
                 data.push(new TextRun({
-                    text: `Status: ${detail.status}`,
+                    text: detail.status?.length > 0 ? `Status: ${detail.status}` : '',
                     size: `${11}pt`,
                     font: 'Calibri',
                     break: 1
                 }));
 
                 data.push(new TextRun({
-                    text: `No Order: ${detail.order_num}`,
+                    text: detail.order_num?.length > 0 ? `No Order: ${detail.order_num}`: '',
                     size: `${11}pt`,
                     font: 'Calibri',
                     break: 1
