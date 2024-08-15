@@ -269,7 +269,7 @@ export class AttendanceService
         return this.response.json();
 	}
 
-	@Cron('0 10 06 * * 1-5',  {
+	@Cron('0 10 07 * * 1-5',  {
 		name: 'Absen',
 		timeZone: 'Asia/Jakarta',
 	})
