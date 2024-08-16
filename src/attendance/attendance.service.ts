@@ -324,8 +324,8 @@ export class AttendanceService
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
 		
-		const start = req.query.start == null ? monday : date.backdate(Number(req.query.start));
-		const end = req.query.end == null ? friday : date.backdate(Number(req.query.end));
+		const start = req.query == undefined || req.query.start == null ? monday : date.backdate(Number(req.query.start));
+		const end = req.query == undefined || req.query.end == null ? friday : date.backdate(Number(req.query.end));
 
 		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
