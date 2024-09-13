@@ -9,4 +9,5 @@ services:
       - 3000:3000
     network_mode: "host"
     volumes:
+      - ./:/usr/src/app
       - ./storage:/usr/src/app/storage

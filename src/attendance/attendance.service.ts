@@ -317,6 +317,42 @@ export class AttendanceService
 		name: 'Weekly Report',
 		timeZone: 'Asia/Jakarta',
 	})
+	async weeklyReportJob()
+	{
+		const report = new CreateAttendanceDto();
+
+		const monday = date.getMondayDate();
+		const friday = date.getFridayDate();
+		
+		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+		
+		const activities = await this.activityModel.find({ 
+			createdAt: { $gte: monday, $lte: friday } 
+		});
+
+		report.date = new Date().toLocaleDateString();
+		const description = activities.map(activity => activity.name).join(`\n`);
+
+		report.deskripsi = `${date.indonesiaFormat(monday)} - ${date.indonesiaFormat(friday)}\n${description}`;
+		report.durasi = ` `;
+		report.jenis = 'Weekly Report';
+		report.type = 'Hari Kerja';
+
+		const weekly = await this.create(report);
+
+		if (weekly.success)
+		{
+			await this.hellgate.send_message(`Weekly report successfully sent at ${date.getCurrentDate()} \n ${"```" + description + "```"}`);
+
+			Logger.log(`Weekly report successfully sent`);
+		}
+		else
+		{
+			Logger.warn(`Failed send weekly report`);
+		}
+
+		return weekly.json();
+	}
 	async weeklyReport(req: Request)
 	{
 		const report = new CreateAttendanceDto();
@@ -324,8 +360,8 @@ export class AttendanceService
 		const monday = date.getMondayDate();
 		const friday = date.getFridayDate();
 		
-		const start = req.query == undefined || req.query.start == null ? monday : date.backdate(Number(req.query.start));
-		const end = req.query == undefined || req.query.end == null ? friday : date.backdate(Number(req.query.end));
+		const start = req?.query == undefined || req?.query.start == null ? monday : date.backdate(Number(req?.query.start));
+		const end = req?.query == undefined || req?.query.end == null ? friday : date.backdate(Number(req?.query.end));
 
 		const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
 		
