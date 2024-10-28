@@ -35,7 +35,7 @@ export class AuthController {
             secure: true,
             sameSite: 'none',
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000)
-        }).send({ message: 'Login success' });
+        }).send({ message: 'Login success', token: token });
     }
 
     @Get('profile')
