@@ -42,7 +42,7 @@ import { RouteModule } from './route/route.module';
         UsersModule,
         RoleModule,
         AuthModule,
-        AssetModule,
+        // AssetModule,
         ProductModule,
         AccountingModule,
         AttendanceModule,

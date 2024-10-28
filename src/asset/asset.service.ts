@@ -96,8 +96,8 @@ export class AssetService {
     }
 
     //running on milliseconds
-    @Interval(3600000)
-    async handleCronAssetCleaning() {
-        await this.cleaning_asset();
-    }
+    // @Interval(3600000)
+    // async handleCronAssetCleaning() {
+    //     await this.cleaning_asset();
+    // }
 }
