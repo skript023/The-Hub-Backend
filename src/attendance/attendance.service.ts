@@ -94,7 +94,7 @@ export class AttendanceService
 		}
 		
 		const response = await this.sheets.spreadsheets.values.batchUpdate({
-			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
 			requestBody: {
 				data: [
 					data
@@ -105,7 +105,7 @@ export class AttendanceService
 		});
 
 		// const response = await this.sheets.spreadsheets.values.append({
-		// 	spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+		// 	spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
 		// 	range: this.checklist_range[date.getCurrentMonth()].range, // Specify the range
 		// 	valueInputOption: ValueInputOption.USER_ENTERED,
 		// 	includeValuesInResponse: true,
@@ -142,7 +142,7 @@ export class AttendanceService
 		}
 
 		const response = await this.sheets.spreadsheets.values.append({
-			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
 			range: `${date.getCurrentMonth()}!A:E`, // Specify the range
 			valueInputOption: ValueInputOption.USER_ENTERED,
 			includeValuesInResponse: true,
@@ -225,7 +225,7 @@ export class AttendanceService
 		}
 		
 		const response = await this.sheets.spreadsheets.values.update({
-			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
 			range: `${attendance.range}`, // Specify the range
 			valueInputOption: ValueInputOption.USER_ENTERED,
 			includeValuesInResponse: true,
@@ -252,7 +252,7 @@ export class AttendanceService
         if (!attendance) throw new NotFoundException('Attendance not found, unable to delete');
 
 		const response = await this.sheets.spreadsheets.values.clear({
-			spreadsheetId: '1H5YjdyNwvyYPZizfeS2A7l8dfiIKI_yffh2DxLNGpYc',
+			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
 			range: `${attendance.range}`,
 		});
 
@@ -425,6 +425,18 @@ export class AttendanceService
 		const absen = new CreateAttendanceDto();
 		const hour   = date.getCurrentHour();
 		const random = date.randomizeMinute();
+
+		const attendant = await this.dayoff.is_attendance();
+
+		if (!attendant) 
+		{
+			this.response.message = 'Tidak ada absen, karena hari libur/cuti bersama';
+			this.response.success = false;
+
+			await this.hellgate.send_message(`Tidak ada absen, karena hari libur/cuti bersama`);
+
+			return this.response.json();
+		}
 
 		absen.date = new Date().toLocaleDateString();
 		absen.deskripsi = '';

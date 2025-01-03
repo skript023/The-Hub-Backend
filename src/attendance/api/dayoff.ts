@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 
 interface DayoffResponse
 {
@@ -14,14 +15,25 @@ export default class Dayoff
     {
         const now = new Date();
 
-        const current_date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+        const endpoint = `${this.url}/api?month=${now.getMonth() + 1}&year=${now.getFullYear()}`;
 
-        const response = await fetch(`${this.url}/api?month=${now.getMonth()}&year=${now.getFullYear()}`, { method: 'GET' });
+        //Logger.log(`Endpoint: ${endpoint}`);
 
-        const dayoff = await response.json() as DayoffResponse;
+        //const current_date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
-        if ((dayoff.tanggal == current_date) || dayoff.is_cuti)
-            return false;
+        const response = await fetch(endpoint, { method: 'GET' });
+
+        const dayoff = await response.json() as DayoffResponse[];
+
+        const result = dayoff.some((response) => {
+            const date = new Date(response.tanggal);
+
+            //Logger.log(`\nToday: ${now.toLocaleDateString()}\nLibur: ${date.toLocaleDateString()}`)
+
+            return date.getTime() === now.getTime()
+        });
+
+        if (result) return false;
 
         return true;
     }
