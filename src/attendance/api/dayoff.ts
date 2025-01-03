@@ -16,11 +16,7 @@ export default class Dayoff
         const now = new Date();
 
         const endpoint = `${this.url}/api?month=${now.getMonth() + 1}&year=${now.getFullYear()}`;
-
-        //Logger.log(`Endpoint: ${endpoint}`);
-
-        //const current_date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-
+        
         const response = await fetch(endpoint, { method: 'GET' });
 
         const dayoff = await response.json() as DayoffResponse[];
@@ -28,9 +24,7 @@ export default class Dayoff
         const result = dayoff.some((response) => {
             const date = new Date(response.tanggal);
 
-            //Logger.log(`\nToday: ${now.toLocaleDateString()}\nLibur: ${date.toLocaleDateString()}`)
-
-            return date.getTime() === now.getTime()
+            return now.getDay() === date.getDay()
         });
 
         if (result) return false;
