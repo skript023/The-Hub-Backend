@@ -23,8 +23,9 @@ export default class Dayoff
 
         const result = dayoff.some((response) => {
             const date = new Date(response.tanggal);
+            Logger.log(`Today: ${now.getDate()} - Dayoff: ${date.getDate()}`);
 
-            return now.getDay() === date.getDay()
+            return now.getDate() === date.getDate()
         });
 
         if (result) return false;
