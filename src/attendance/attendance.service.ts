@@ -17,6 +17,7 @@ import Profile from 'src/auth/interface/user.profile';
 import { Request } from 'express';
 import Dayoff from './api/dayoff';
 import HellGate from '@/util/hell_gate_bot/hell_gate';
+import neuron from './api/neuron';
 
 @Injectable()
 export class AttendanceService 
@@ -94,7 +95,7 @@ export class AttendanceService
 		}
 		
 		const response = await this.sheets.spreadsheets.values.batchUpdate({
-			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
+			spreadsheetId: process.env.GOOGLE_SHEETS_ID,
 			requestBody: {
 				data: [
 					data
@@ -142,7 +143,7 @@ export class AttendanceService
 		}
 
 		const response = await this.sheets.spreadsheets.values.append({
-			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
+			spreadsheetId: process.env.GOOGLE_SHEETS_ID,
 			range: `${date.getCurrentMonth()}!A:E`, // Specify the range
 			valueInputOption: ValueInputOption.USER_ENTERED,
 			includeValuesInResponse: true,
@@ -225,7 +226,7 @@ export class AttendanceService
 		}
 		
 		const response = await this.sheets.spreadsheets.values.update({
-			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
+			spreadsheetId: process.env.GOOGLE_SHEETS_ID,
 			range: `${attendance.range}`, // Specify the range
 			valueInputOption: ValueInputOption.USER_ENTERED,
 			includeValuesInResponse: true,
@@ -252,7 +253,7 @@ export class AttendanceService
         if (!attendance) throw new NotFoundException('Attendance not found, unable to delete');
 
 		const response = await this.sheets.spreadsheets.values.clear({
-			spreadsheetId: '1KIx2pAhwkmk6xAYmYNwE8tU-5luPiCjLv-EPr-2q1sM',
+			spreadsheetId: process.env.GOOGLE_SHEETS_ID,
 			range: `${attendance.range}`,
 		});
 
@@ -283,6 +284,34 @@ export class AttendanceService
 			this.response.success = false;
 
 			await this.hellgate.send_message(`Tidak ada absen, karena hari libur/cuti bersama`);
+
+			return this.response.json();
+		}
+
+		const can_attend = await neuron.attendance_check();
+
+		if (!can_attend) 
+		{
+			this.response.message = 'Failed to check attendance at Neuron';
+            this.response.success = false;
+
+			await this.hellgate.send_message(`Failed to save attendance at Neuron`);
+
+			Logger.warn('Failed to save attendance at Neuron', 'Auto Attendance');
+
+			return this.response.json();
+		}
+
+		const neuron_attendance = await neuron.attendance_save();
+
+		if (!neuron_attendance)
+		{
+			this.response.message = 'Failed to save attendance at Neuron';
+			this.response.success = false;
+
+			await this.hellgate.send_message(`Failed to save attendance at Neuron`);
+
+			Logger.warn('Failed to save attendance at Neuron', 'Auto Attendance');
 
 			return this.response.json();
 		}
