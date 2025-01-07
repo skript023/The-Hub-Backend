@@ -52,7 +52,7 @@ class Neuron
             headers: {
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Cookies': `376aca3a62249dc5cad387817751672a=41ek0vjmpkk2agrm4fr0k3a0lp`,
+                'Cookies': process.env.COOKIES,
                 'Referer': 'https://hrmis.neuron.id/attendance/dashboard/form',
                 'Origin': 'origin',
                 'Connection': 'keep-alive',
@@ -92,7 +92,7 @@ class Neuron
               "sec-fetch-mode": "cors",
               "sec-fetch-site": "same-origin",
               "x-requested-with": "XMLHttpRequest",
-              "cookie": "376aca3a62249dc5cad387817751672a=41ek0vjmpkk2agrm4fr0k3a0lp",
+              "cookie": process.env.COOKIES,
               "Referer": "https://hrmis.neuron.id/attendance/dashboard/form",
               "Referrer-Policy": "strict-origin-when-cross-origin"
             },
