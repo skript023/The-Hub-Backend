@@ -32,8 +32,8 @@ class Neuron
     {
         const now = new Date();
         const data: any = {
-            latitude: -6.1810366,
-            longitude: 106.8262384,
+            latitude: -6.2297907,
+            longitude: 106.8184312,
             type_id: 1,
             source_type_code: "WEB",
             source_reference: "",
@@ -69,7 +69,7 @@ class Neuron
 
         if (response.status != 200)
         {
-            Logger.log('Failed send attendance to neuron', 'Neuron Attendance');
+            Logger.log(`Response status - ${response.status}`, 'Neuron Attendance');
 
             return false;
         }

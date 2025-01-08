@@ -290,30 +290,9 @@ export class AttendanceService
 
 		const can_attend = await neuron.attendance_check();
 
-		if (!can_attend) 
+		if (can_attend) 
 		{
-			this.response.message = 'Failed to check attendance at Neuron';
-            this.response.success = false;
-
-			await this.hellgate.send_message(`Failed to save attendance at Neuron`);
-
-			Logger.warn('Failed to save attendance at Neuron', 'Auto Attendance');
-
-			return this.response.json();
-		}
-
-		const neuron_attendance = await neuron.attendance_save();
-
-		if (!neuron_attendance)
-		{
-			this.response.message = 'Failed to save attendance at Neuron';
-			this.response.success = false;
-
-			await this.hellgate.send_message(`Failed to save attendance at Neuron`);
-
-			Logger.warn('Failed to save attendance at Neuron', 'Auto Attendance');
-
-			return this.response.json();
+			await neuron.attendance_save();
 		}
 
 		const absen = new CreateAttendanceDto();
