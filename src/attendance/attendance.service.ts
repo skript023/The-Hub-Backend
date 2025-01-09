@@ -292,7 +292,7 @@ export class AttendanceService
 
 		if (can_attend) 
 		{
-			await neuron.attendance_save();
+			neuron.attendance_save();
 		}
 
 		const absen = new CreateAttendanceDto();

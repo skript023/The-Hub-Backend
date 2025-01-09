@@ -63,7 +63,7 @@ class Neuron
             body: url_data
         });
 
-        const json = await response.json();
+        const json = await response.json() as ApiResponse;
 
         Logger.debug(json, "Attendance Check");
 
