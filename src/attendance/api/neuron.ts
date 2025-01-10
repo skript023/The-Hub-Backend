@@ -63,18 +63,7 @@ class Neuron
             body: url_data
         });
 
-        const json = await response.json() as ApiResponse;
-
-        Logger.debug(json, "Attendance Check");
-
-        if (response.status != 200)
-        {
-            Logger.log(`Response status - ${response.status}`, 'Neuron Attendance');
-
-            return false;
-        }
-
-        return true;
+        Logger.debug(response.text(), "Attendance Check");
     }
 
     async attendance_check()
